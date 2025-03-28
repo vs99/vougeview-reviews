@@ -1,103 +1,179 @@
 import Image from "next/image";
+import Link from "next/link";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import ProductCard from "@/components/ProductCard";
+
+// Mock data for featured products
+const featuredProducts = [
+  {
+    id: "1",
+    name: "Hydrating Face Serum",
+    description:
+      "Vitamin C enriched serum with hyaluronic acid for radiant, glowing skin.",
+    price: 49.99,
+    rating: 4.8,
+    reviewCount: 128,
+    imageUrl: "/images/serum.jpg",
+    category: "Skincare",
+    brand: "Glow Beauty",
+    size: "30ml",
+    bestFor: ["Dry Skin", "Brightening", "Anti-Aging"],
+  },
+  {
+    id: "2",
+    name: "Matte Lipstick",
+    description:
+      "Long-lasting matte lipstick with intense color payoff and comfortable wear.",
+    price: 24.99,
+    rating: 4.6,
+    reviewCount: 89,
+    imageUrl: "/images/lipstick.jpg",
+    category: "Makeup",
+    brand: "Beauty Basics",
+    size: "3.5g",
+    bestFor: ["Long Wear", "Matte Finish", "Rich Pigment"],
+  },
+  {
+    id: "3",
+    name: "Natural Hair Shampoo",
+    description: "Sulfate-free shampoo with argan oil for healthy, shiny hair.",
+    price: 29.99,
+    rating: 4.7,
+    reviewCount: 256,
+    imageUrl: "/images/shampoo.jpg",
+    category: "Hair Care",
+    brand: "Pure Naturals",
+    size: "250ml",
+    bestFor: ["Damaged Hair", "Color-Treated", "Natural Hair"],
+  },
+  {
+    id: "4",
+    name: "Anti-Aging Eye Cream",
+    description:
+      "Retinol-infused eye cream to reduce fine lines and dark circles.",
+    price: 79.99,
+    rating: 4.5,
+    reviewCount: 167,
+    imageUrl: "/images/eye-cream.jpg",
+    category: "Skincare",
+    brand: "Youth Lab",
+    size: "15ml",
+    bestFor: ["Fine Lines", "Dark Circles", "Mature Skin"],
+  },
+];
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
+      <main className="flex-grow">
+        {/* Hero Section */}
+        <section className="bg-gradient-to-r from-pink-600 to-purple-600 text-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+            <div className="text-center">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">
+                Discover Your Beauty
+              </h1>
+              <p className="text-xl sm:text-2xl mb-8 max-w-3xl mx-auto">
+                Read authentic reviews from beauty enthusiasts and make informed
+                decisions
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  href="/products"
+                  className="bg-white text-pink-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors"
+                >
+                  Explore Products
+                </Link>
+                <Link
+                  href="/add-review"
+                  className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white/10 transition-colors"
+                >
+                  Share Your Experience
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Featured Products Section */}
+        <section className="py-16 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                Trending Beauty Products
+              </h2>
+              <p className="text-gray-600 max-w-2xl mx-auto">
+                Discover our most-loved beauty products based on real user
+                reviews
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {featuredProducts.map((product) => (
+                <ProductCard key={product.id} {...product} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Categories Section */}
+        <section className="py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                Shop by Category
+              </h2>
+              <p className="text-gray-600 max-w-2xl mx-auto">
+                Explore our curated collection of beauty products
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {["Skincare", "Makeup", "Hair Care", "Fragrances"].map(
+                (category) => (
+                  <Link
+                    key={category}
+                    href={`/products/${category
+                      .toLowerCase()
+                      .replace(" ", "-")}`}
+                    className="group relative h-48 rounded-lg overflow-hidden bg-gray-100 hover:opacity-90 transition-opacity"
+                  >
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <h3 className="text-xl font-semibold text-gray-900">
+                        {category}
+                      </h3>
+                    </div>
+                  </Link>
+                )
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="bg-pink-600 text-white py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 className="text-3xl font-bold mb-4">
+              Share Your Beauty Journey
+            </h2>
+            <p className="text-xl mb-8 max-w-2xl mx-auto">
+              Join our community of beauty enthusiasts and help others discover
+              their perfect products
+            </p>
+            <Link
+              href="/add-review"
+              className="bg-white text-pink-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors inline-block"
+            >
+              Write a Review
+            </Link>
+          </div>
+        </section>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+      <Footer />
     </div>
   );
 }
