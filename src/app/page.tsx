@@ -1,179 +1,278 @@
 import Image from "next/image";
 import Link from "next/link";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import ProductCard from "@/components/ProductCard";
+import CategoryCard from "./components/CategoryCard";
+import ProductCard from "./components/ProductCard";
+import ReviewCard from "./components/ReviewCard";
 
-// Mock data for featured products
-const featuredProducts = [
+// Mock data for categories
+const categories = [
   {
-    id: "1",
-    name: "Hydrating Face Serum",
-    description:
-      "Vitamin C enriched serum with hyaluronic acid for radiant, glowing skin.",
-    price: 49.99,
+    id: "beauty",
+    name: "Beauty",
+    image:
+      "https://images.unsplash.com/photo-1596462502278-27bfdc403348?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    productCount: 120,
+  },
+  {
+    id: "cars",
+    name: "Cars",
+    image:
+      "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    productCount: 75,
+  },
+  {
+    id: "electronics",
+    name: "Electronics",
+    image:
+      "https://images.unsplash.com/photo-1550009158-9ebf69173e03?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    productCount: 200,
+  },
+  {
+    id: "home-garden",
+    name: "Home & Garden",
+    image:
+      "https://images.unsplash.com/photo-1615529328331-f8917597711f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    productCount: 150,
+  },
+];
+
+// Mock data for products
+const products = [
+  {
+    id: 1,
+    title: "Advanced Night Repair Serum",
+    category: "Beauty",
+    image:
+      "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
     rating: 4.8,
-    reviewCount: 128,
-    imageUrl: "/images/serum.jpg",
-    category: "Skincare",
-    brand: "Glow Beauty",
-    size: "30ml",
-    bestFor: ["Dry Skin", "Brightening", "Anti-Aging"],
-  },
-  {
-    id: "2",
-    name: "Matte Lipstick",
+    reviewCount: 352,
     description:
-      "Long-lasting matte lipstick with intense color payoff and comfortable wear.",
-    price: 24.99,
-    rating: 4.6,
-    reviewCount: 89,
-    imageUrl: "/images/lipstick.jpg",
-    category: "Makeup",
-    brand: "Beauty Basics",
-    size: "3.5g",
-    bestFor: ["Long Wear", "Matte Finish", "Rich Pigment"],
+      "Advanced Night Repair Synchronized Multi-Recovery Complex. Reduces multiple signs of aging caused by modern life.",
+    price: "$75.00",
   },
   {
-    id: "3",
-    name: "Natural Hair Shampoo",
-    description: "Sulfate-free shampoo with argan oil for healthy, shiny hair.",
-    price: 29.99,
+    id: 2,
+    title: "Pro Display XDR Monitor",
+    category: "Electronics",
+    image:
+      "https://images.unsplash.com/photo-1616763355548-1b606f439f86?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    rating: 4.9,
+    reviewCount: 127,
+    description:
+      "A professional display with Retina 6K resolution, amazing color accuracy, and incredible HDR performance.",
+    price: "$4,999.00",
+  },
+  {
+    id: 3,
+    title: "Luxury Down Comforter",
+    category: "Home & Garden",
+    image:
+      "https://images.unsplash.com/photo-1613977257363-707ba9348227?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
     rating: 4.7,
-    reviewCount: 256,
-    imageUrl: "/images/shampoo.jpg",
-    category: "Hair Care",
-    brand: "Pure Naturals",
-    size: "250ml",
-    bestFor: ["Damaged Hair", "Color-Treated", "Natural Hair"],
+    reviewCount: 208,
+    description:
+      "Premium all-season down comforter with cotton shell, baffle box construction for maximum loft and warmth.",
+    price: "$199.00",
   },
   {
-    id: "4",
-    name: "Anti-Aging Eye Cream",
+    id: 4,
+    title: "Model X SUV",
+    category: "Cars",
+    image:
+      "https://images.unsplash.com/photo-1633240188018-1100c307e445?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    rating: 4.6,
+    reviewCount: 95,
     description:
-      "Retinol-infused eye cream to reduce fine lines and dark circles.",
-    price: 79.99,
+      "All-electric SUV with long range, room for up to seven, and Falcon Wing doors for easy access to the second and third row seats.",
+    price: "$79,990",
+  },
+];
+
+// Mock data for reviews
+const reviews = [
+  {
+    id: 1,
+    user: {
+      name: "Sarah Johnson",
+      image: "https://randomuser.me/api/portraits/women/44.jpg",
+      reviews: 28,
+    },
+    rating: 5,
+    title: "Absolutely beautiful results!",
+    content:
+      "I've been using this serum for a month and the results are incredible. My skin looks more radiant, and fine lines are noticeably reduced. I apply it every night before bed and wake up to glowing skin. Would highly recommend to anyone looking to improve their skincare routine.",
+    date: "2023-11-15T12:00:00Z",
+    helpfulCount: 42,
+    productId: 1,
+    productName: "Advanced Night Repair Serum",
+    verified: true,
+  },
+  {
+    id: 2,
+    user: {
+      name: "Michael Chen",
+      image: "https://randomuser.me/api/portraits/men/22.jpg",
+      reviews: 14,
+    },
     rating: 4.5,
-    reviewCount: 167,
-    imageUrl: "/images/eye-cream.jpg",
-    category: "Skincare",
-    brand: "Youth Lab",
-    size: "15ml",
-    bestFor: ["Fine Lines", "Dark Circles", "Mature Skin"],
+    title: "Great display, but expensive",
+    content:
+      "The Pro Display XDR is stunning to look at and works perfectly for my design work. Colors are incredibly accurate, and the 6K resolution makes everything look crisp. The only drawback is the price, especially when you add the stand. If you're a professional who needs color accuracy though, it's worth the investment.",
+    date: "2023-10-22T15:30:00Z",
+    helpfulCount: 28,
+    productId: 2,
+    productName: "Pro Display XDR Monitor",
+    verified: true,
   },
 ];
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-
-      <main className="flex-grow">
-        {/* Hero Section */}
-        <section className="bg-gradient-to-r from-pink-600 to-purple-600 text-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-            <div className="text-center">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">
-                Discover Your Beauty
-              </h1>
-              <p className="text-xl sm:text-2xl mb-8 max-w-3xl mx-auto">
-                Read authentic reviews from beauty enthusiasts and make informed
-                decisions
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link
-                  href="/products"
-                  className="bg-white text-pink-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors"
-                >
-                  Explore Products
-                </Link>
-                <Link
-                  href="/add-review"
-                  className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white/10 transition-colors"
-                >
-                  Share Your Experience
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Featured Products Section */}
-        <section className="py-16 bg-gray-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Trending Beauty Products
-              </h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                Discover our most-loved beauty products based on real user
-                reviews
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {featuredProducts.map((product) => (
-                <ProductCard key={product.id} {...product} />
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Categories Section */}
-        <section className="py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Shop by Category
-              </h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                Explore our curated collection of beauty products
-              </p>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {["Skincare", "Makeup", "Hair Care", "Fragrances"].map(
-                (category) => (
-                  <Link
-                    key={category}
-                    href={`/products/${category
-                      .toLowerCase()
-                      .replace(" ", "-")}`}
-                    className="group relative h-48 rounded-lg overflow-hidden bg-gray-100 hover:opacity-90 transition-opacity"
-                  >
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <h3 className="text-xl font-semibold text-gray-900">
-                        {category}
-                      </h3>
-                    </div>
-                  </Link>
-                )
-              )}
-            </div>
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="bg-pink-600 text-white py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl font-bold mb-4">
-              Share Your Beauty Journey
-            </h2>
-            <p className="text-xl mb-8 max-w-2xl mx-auto">
-              Join our community of beauty enthusiasts and help others discover
-              their perfect products
+    <div className="bg-gray-50">
+      {/* Hero Section */}
+      <div className="relative bg-indigo-600">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
+          <div className="md:w-2/3">
+            <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
+              Discover the best products with trusted reviews
+            </h1>
+            <p className="mt-6 text-xl text-indigo-100 max-w-3xl">
+              VougeView provides honest, comprehensive reviews to help you make
+              informed purchase decisions.
             </p>
+            <div className="mt-10 flex space-x-4">
+              <Link
+                href="/categories"
+                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-indigo-700 bg-white hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Browse Categories
+              </Link>
+              <Link
+                href="/reviews"
+                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-800 bg-opacity-60 hover:bg-opacity-70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Latest Reviews
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Categories Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-3xl font-bold text-gray-900">Top Categories</h2>
+          <Link
+            href="/categories"
+            className="text-indigo-600 hover:text-indigo-800 font-medium"
+          >
+            View All Categories
+          </Link>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {categories.map((category) => (
+            <CategoryCard
+              key={category.id}
+              id={category.id}
+              name={category.name}
+              image={category.image}
+              productCount={category.productCount}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Trending Products Section */}
+      <div className="bg-white py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-900">
+              Trending Products
+            </h2>
             <Link
-              href="/add-review"
-              className="bg-white text-pink-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors inline-block"
+              href="/products"
+              className="text-indigo-600 hover:text-indigo-800 font-medium"
             >
-              Write a Review
+              View All Products
             </Link>
           </div>
-        </section>
-      </main>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {products.map((product) => (
+              <ProductCard
+                key={product.id}
+                id={product.id}
+                title={product.title}
+                category={product.category}
+                image={product.image}
+                rating={product.rating}
+                reviewCount={product.reviewCount}
+                description={product.description}
+                price={product.price}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
 
-      <Footer />
+      {/* Latest Reviews Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-3xl font-bold text-gray-900">Latest Reviews</h2>
+          <Link
+            href="/reviews"
+            className="text-indigo-600 hover:text-indigo-800 font-medium"
+          >
+            View All Reviews
+          </Link>
+        </div>
+        <div className="space-y-4">
+          {reviews.map((review) => (
+            <ReviewCard
+              key={review.id}
+              id={review.id}
+              user={review.user}
+              rating={review.rating}
+              title={review.title}
+              content={review.content}
+              date={review.date}
+              helpfulCount={review.helpfulCount}
+              productId={review.productId}
+              productName={review.productName}
+              verified={review.verified}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Call to Action */}
+      <div className="bg-indigo-700">
+        <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between">
+          <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+            <span className="block">Ready to share your experience?</span>
+            <span className="block text-indigo-200">
+              Write a review and help others decide.
+            </span>
+          </h2>
+          <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
+            <div className="inline-flex rounded-md shadow">
+              <Link
+                href="/auth/signup"
+                className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-indigo-50"
+              >
+                Get Started
+              </Link>
+            </div>
+            <div className="ml-3 inline-flex rounded-md shadow">
+              <Link
+                href="/about"
+                className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+              >
+                Learn More
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
