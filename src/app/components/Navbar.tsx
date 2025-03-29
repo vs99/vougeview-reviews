@@ -2,83 +2,180 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [showCategories, setShowCategories] = useState(false);
 
   const categories = [
-    { name: "Beauty", href: "/categories/beauty" },
-    { name: "Cars", href: "/categories/cars" },
-    { name: "Electronics", href: "/categories/electronics" },
-    { name: "Home & Garden", href: "/categories/home-garden" },
-    { name: "Fashion", href: "/categories/fashion" },
+    {
+      name: "Beauty",
+      href: "/categories/beauty",
+      description: "Skincare, makeup, fragrances and beauty tools",
+      productCount: 120,
+    },
+    {
+      name: "Cars",
+      href: "/categories/cars",
+      description: "Vehicles, car accessories and automotive tech",
+      productCount: 75,
+    },
+    {
+      name: "Electronics",
+      href: "/categories/electronics",
+      description: "Computers, phones, gadgets and accessories",
+      productCount: 200,
+    },
+    {
+      name: "Home & Garden",
+      href: "/categories/home-garden",
+      description: "Furniture, decor, kitchenware and gardening",
+      productCount: 150,
+    },
+    {
+      name: "Fashion",
+      href: "/categories/fashion",
+      description: "Clothing, footwear, bags and accessories",
+      productCount: 95,
+    },
   ];
 
+  const featuredCategory = {
+    name: "Summer Collections",
+    href: "/collections/summer",
+    description: "Explore our curated summer products with exclusive reviews",
+    image:
+      "https://images.unsplash.com/photo-1621184455862-c163dfb30e0f?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+  };
+
   return (
-    <nav className="bg-white shadow-md">
+    <nav className="border-b bg-background sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex">
-            <div className="flex-shrink-0 flex items-center">
-              <Link href="/" className="text-2xl font-bold text-indigo-600">
-                VougeView
-              </Link>
-            </div>
-            <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-              <Link
-                href="/"
-                className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              >
-                Home
-              </Link>
-              <div className="relative">
-                <button
-                  onClick={() => setShowCategories(!showCategories)}
-                  className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                >
-                  Categories
-                  <svg
-                    className="ml-2 h-5 w-5"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
-                {showCategories && (
-                  <div className="absolute z-10 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    {categories.map((category) => (
-                      <Link
-                        key={category.name}
-                        href={category.href}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+          <div className="flex items-center">
+            <Link href="/" className="text-2xl font-bold text-indigo-600 mr-8">
+              VougeView
+            </Link>
+
+            <div className="hidden md:flex">
+              <NavigationMenu>
+                <NavigationMenuList>
+                  <NavigationMenuItem>
+                    <Link href="/" legacyBehavior passHref>
+                      <NavigationMenuLink
+                        className={navigationMenuTriggerStyle()}
                       >
-                        {category.name}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-              <Link
-                href="/reviews"
-                className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              >
-                Latest Reviews
-              </Link>
+                        Home
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger>Categories</NavigationMenuTrigger>
+                    <NavigationMenuContent className="bg-white shadow-md rounded-lg p-4">
+                      <div className="grid grid-cols-5 w-[800px] gap-4">
+                        <div className="col-span-3 p-4">
+                          <div className="mb-3 text-lg font-semibold text-gray-900">
+                            Browse Categories
+                          </div>
+                          <Separator className="mb-4" />
+                          <div className="grid grid-cols-2 gap-x-4 gap-y-3">
+                            {categories.map((category) => (
+                              <Link
+                                key={category.name}
+                                href={category.href}
+                                className="group block rounded-md p-3 transition-all duration-200 hover:bg-gray-100"
+                              >
+                                <div className="font-medium text-gray-800 group-hover:text-indigo-600">
+                                  {category.name}
+                                </div>
+                                <div className="text-xs text-gray-600">
+                                  {category.description}
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                  {category.productCount} products
+                                </div>
+                              </Link>
+                            ))}
+                          </div>
+                          <div className="mt-4 flex justify-end">
+                            <Link href="/categories">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="text-xs font-medium text-indigo-600 hover:underline"
+                              >
+                                View All Categories →
+                              </Button>
+                            </Link>
+                          </div>
+                        </div>
+                        <div className="col-span-2 bg-gray-100 rounded-lg overflow-hidden">
+                          <div className="p-6 flex flex-col h-full">
+                            <div className="text-lg font-semibold text-gray-900 mb-2">
+                              Featured
+                            </div>
+                            <div className="relative aspect-video overflow-hidden rounded-md mb-2">
+                              <Image
+                                src={featuredCategory.image}
+                                alt={featuredCategory.name}
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
+                            <h3 className="font-medium text-gray-800">
+                              {featuredCategory.name}
+                            </h3>
+                            <p className="text-sm text-gray-600 mb-3">
+                              {featuredCategory.description}
+                            </p>
+                            <div className="mt-auto">
+                              <Link href={featuredCategory.href}>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="w-full border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white"
+                                >
+                                  Explore
+                                </Button>
+                              </Link>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+
+                  <NavigationMenuItem>
+                    <Link href="/reviews" legacyBehavior passHref>
+                      <NavigationMenuLink
+                        className={navigationMenuTriggerStyle()}
+                      >
+                        Latest Reviews
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
             </div>
           </div>
-          <div className="hidden sm:ml-6 sm:flex sm:items-center">
-            <div className="relative mx-4">
+
+          <div className="hidden md:flex md:items-center md:space-x-4">
+            <div className="relative w-64">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <svg
-                  className="h-5 w-5 text-gray-400"
+                  className="h-5 w-5 text-muted-foreground"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
                   fill="currentColor"
@@ -91,35 +188,35 @@ const Navbar = () => {
                   />
                 </svg>
               </div>
-              <input
+              <Input
                 type="text"
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="pl-10"
                 placeholder="Search products..."
               />
             </div>
-            <Link
-              href="/auth/login"
-              className="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium"
-            >
-              Login
+
+            <Link href="/auth/login">
+              <Button variant="ghost" size="sm">
+                Login
+              </Button>
             </Link>
-            <Link
-              href="/auth/signup"
-              className="ml-2 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              Sign up
+
+            <Link href="/auth/signup">
+              <Button size="sm">Sign up</Button>
             </Link>
           </div>
-          <div className="-mr-2 flex items-center sm:hidden">
-            <button
+
+          <div className="flex items-center md:hidden">
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
-              aria-expanded="false"
+              className="h-10 w-10"
             >
               <span className="sr-only">Open main menu</span>
               {isOpen ? (
                 <svg
-                  className="block h-6 w-6"
+                  className="h-6 w-6"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -135,7 +232,7 @@ const Navbar = () => {
                 </svg>
               ) : (
                 <svg
-                  className="block h-6 w-6"
+                  className="h-6 w-6"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -150,79 +247,94 @@ const Navbar = () => {
                   />
                 </svg>
               )}
-            </button>
+            </Button>
           </div>
         </div>
       </div>
 
+      {/* Mobile menu */}
       {isOpen && (
-        <div className="sm:hidden">
-          <div className="pt-2 pb-3 space-y-1">
+        <div className="md:hidden">
+          <div className="px-2 pt-2 pb-3 space-y-1">
             <Link
               href="/"
-              className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
+              className="block px-3 py-2 rounded-md text-base font-medium hover:bg-accent hover:text-accent-foreground"
             >
               Home
             </Link>
-            <button
-              onClick={() => setShowCategories(!showCategories)}
-              className="w-full text-left block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
-            >
-              Categories
-            </button>
-            {showCategories && (
-              <div className="pl-6 space-y-1">
+
+            <div>
+              <div className="block px-3 py-2 text-base font-medium">
+                Categories
+              </div>
+              <div className="px-3 py-2 bg-muted/70 rounded-md mx-3 space-y-2">
                 {categories.map((category) => (
                   <Link
                     key={category.name}
                     href={category.href}
-                    className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
+                    className="flex flex-col p-2 rounded-md hover:bg-accent hover:text-accent-foreground"
                   >
-                    {category.name}
+                    <span className="font-medium">{category.name}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {category.description}
+                    </span>
                   </Link>
                 ))}
+                <Separator className="my-2" />
+                <Link
+                  href="/categories"
+                  className="flex justify-center pt-1 text-sm text-primary hover:underline"
+                >
+                  View all categories
+                </Link>
               </div>
-            )}
+            </div>
+
             <Link
               href="/reviews"
-              className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
+              className="block px-3 py-2 rounded-md text-base font-medium hover:bg-accent hover:text-accent-foreground"
             >
               Latest Reviews
             </Link>
-            <div className="relative mx-4 my-2">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg
-                  className="h-5 w-5 text-gray-400"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+
+            <div className="px-3 py-2">
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg
+                    className="h-5 w-5 text-muted-foreground"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <Input
+                  type="text"
+                  className="pl-10 w-full"
+                  placeholder="Search products..."
+                />
               </div>
-              <input
-                type="text"
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder="Search products..."
-              />
             </div>
-            <Link
-              href="/auth/login"
-              className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
-            >
-              Login
-            </Link>
-            <Link
-              href="/auth/signup"
-              className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
-            >
-              Sign up
-            </Link>
+
+            <div className="flex pt-2 space-x-2">
+              <Link href="/auth/login" className="w-1/2">
+                <Button variant="outline" className="w-full" size="sm">
+                  Login
+                </Button>
+              </Link>
+
+              <Link href="/auth/signup" className="w-1/2">
+                <Button className="w-full" size="sm">
+                  Sign up
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       )}
