@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import React from "react";
-import ProductCard from "../../../components/ProductCard";
+import ProductCard from "../../components/ProductCard";
 
 // Mock categories data
 const categories = [
@@ -343,7 +343,6 @@ const CategoryPage = () => {
                 rating={product.rating}
                 reviewCount={product.reviewCount}
                 description={product.description}
-                price={product.price}
               />
             ))}
           </div>

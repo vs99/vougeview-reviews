@@ -1,7 +1,8 @@
 "use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 
 interface ProductCardProps {
   id: number;
@@ -11,7 +12,6 @@ interface ProductCardProps {
   rating: number;
   reviewCount: number;
   description: string;
-  price?: string;
 }
 
 const ProductCard = ({
@@ -22,7 +22,6 @@ const ProductCard = ({
   rating,
   reviewCount,
   description,
-  price,
 }: ProductCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -120,10 +119,7 @@ const ProductCard = ({
           <p className="mt-2 text-sm text-gray-500 line-clamp-2">
             {description}
           </p>
-          <div className="mt-3 flex items-center justify-between">
-            {price && (
-              <span className="text-md font-medium text-gray-900">{price}</span>
-            )}
+          <div className="mt-3">
             <span className="inline-flex items-center justify-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
               Read Review
             </span>

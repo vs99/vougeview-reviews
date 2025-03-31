@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -16,20 +15,15 @@ const LoginPage = () => {
     setError(null);
 
     try {
-      // In a real app, you would make an API call to authenticate the user
-      // For now, let's just simulate a login process
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Check if email and password are entered
+      // Validate input fields
       if (!email.trim() || !password.trim()) {
         throw new Error("Please enter both email and password");
       }
-
-      // Check for a valid email format
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
         throw new Error("Please enter a valid email address");
       }
+
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
@@ -44,7 +38,10 @@ const LoginPage = () => {
       }
 
       console.log("User logged in:", data);
-      // Optionally store user data or token (if using JWT/session)
+      // Store user data in localStorage for later use (e.g., in Navbar)
+      localStorage.setItem("user", JSON.stringify(data.data));
+
+      // Redirect to homepage after successful login
       window.location.href = "/";
     } catch (err: any) {
       setError(err.message);
@@ -189,6 +186,7 @@ const LoginPage = () => {
                   className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
                 >
                   <span className="sr-only">Sign in with Google</span>
+                  {/* SVG icon for Google */}
                   <svg
                     className="w-5 h-5"
                     aria-hidden="true"
@@ -206,6 +204,7 @@ const LoginPage = () => {
                   className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
                 >
                   <span className="sr-only">Sign in with Facebook</span>
+                  {/* SVG icon for Facebook */}
                   <svg
                     className="w-5 h-5"
                     aria-hidden="true"
@@ -227,6 +226,7 @@ const LoginPage = () => {
                   className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
                 >
                   <span className="sr-only">Sign in with Twitter</span>
+                  {/* SVG icon for Twitter */}
                   <svg
                     className="w-5 h-5"
                     aria-hidden="true"

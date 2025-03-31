@@ -1,4 +1,4 @@
-// src/app/api/auth/login/route.ts
+// app/api/auth/login/route.ts
 import { NextResponse } from 'next/server';
 import bcrypt from "bcryptjs";
 import dbConnect from "@/lib/dbConnect";
@@ -38,9 +38,8 @@ export async function POST(request: Request) {
       );
     }
     
-    // You can implement JWT tokens here if needed
-    // const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-    
+    // You can implement JWT tokens or sessions here if needed.
+    // For this example we simply return the user data.
     return NextResponse.json({ 
       success: true, 
       data: {

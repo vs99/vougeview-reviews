@@ -1,11 +1,48 @@
+// app/page.tsx
 import Image from "next/image";
 import Link from "next/link";
 import ProductCard from "./components/ProductCard";
 import CategoryCard from "./components/CategoryCard";
 import ReviewCard from "./components/ReviewCard";
 
+// Define TypeScript types
+type Category = {
+  id: string;
+  name: string;
+  image: string;
+  productCount: number;
+};
+
+type Product = {
+  id: number;
+  title: string;
+  category: string;
+  image: string;
+  rating: number;
+  reviewCount: number;
+  description: string;
+  price: string;
+};
+
+type Review = {
+  id: number;
+  user: {
+    name: string;
+    image: string;
+    reviews: number;
+  };
+  rating: number;
+  title: string;
+  content: string;
+  date: string;
+  helpfulCount: number;
+  productId: number;
+  productName: string;
+  verified: boolean;
+};
+
 // Mock data for categories
-const categories = [
+const categories: Category[] = [
   {
     id: "beauty",
     name: "Beauty",
@@ -37,7 +74,7 @@ const categories = [
 ];
 
 // Mock data for products
-const products = [
+const products: Product[] = [
   {
     id: 1,
     title: "Advanced Night Repair Serum",
@@ -47,7 +84,7 @@ const products = [
     rating: 4.8,
     reviewCount: 352,
     description:
-      "Advanced Night Repair Synchronized Multi-Recovery Complex. Reduces multiple signs of aging caused by modern life.",
+      "Our Advanced Night Repair Serum utilizes a synchronized multi-recovery complex to reduce signs of aging and reveal radiant skin.",
     price: "$75.00",
   },
   {
@@ -59,7 +96,7 @@ const products = [
     rating: 4.9,
     reviewCount: 127,
     description:
-      "A professional display with Retina 6K resolution, amazing color accuracy, and incredible HDR performance.",
+      "Experience breathtaking visuals with a professional-grade display featuring Retina 6K resolution and incredible HDR performance.",
     price: "$4,999.00",
   },
   {
@@ -71,7 +108,7 @@ const products = [
     rating: 4.7,
     reviewCount: 208,
     description:
-      "Premium all-season down comforter with cotton shell, baffle box construction for maximum loft and warmth.",
+      "Stay warm in style with our premium all-season down comforter, designed for maximum loft and cozy comfort.",
     price: "$199.00",
   },
   {
@@ -83,13 +120,13 @@ const products = [
     rating: 4.6,
     reviewCount: 95,
     description:
-      "All-electric SUV with long range, room for up to seven, and Falcon Wing doors for easy access to the second and third row seats.",
+      "Discover cutting-edge electric performance with the Model X SUV featuring innovative design and advanced safety features.",
     price: "$79,990",
   },
 ];
 
 // Mock data for reviews
-const reviews = [
+const reviews: Review[] = [
   {
     id: 1,
     user: {
@@ -100,7 +137,7 @@ const reviews = [
     rating: 5,
     title: "Absolutely beautiful results!",
     content:
-      "I've been using this serum for a month and the results are incredible. My skin looks more radiant, and fine lines are noticeably reduced. I apply it every night before bed and wake up to glowing skin. Would highly recommend to anyone looking to improve their skincare routine.",
+      "I have been using this serum for a month and the difference is remarkable. My skin is brighter, and fine lines are visibly reduced. Highly recommended for anyone serious about skincare.",
     date: "2023-11-15T12:00:00Z",
     helpfulCount: 42,
     productId: 1,
@@ -115,9 +152,9 @@ const reviews = [
       reviews: 14,
     },
     rating: 4.5,
-    title: "Great display, but expensive",
+    title: "Great display, but a premium price",
     content:
-      "The Pro Display XDR is stunning to look at and works perfectly for my design work. Colors are incredibly accurate, and the 6K resolution makes everything look crisp. The only drawback is the price, especially when you add the stand. If you're a professional who needs color accuracy though, it's worth the investment.",
+      "The Pro Display XDR is stunning with its 6K resolution and color accuracy. It’s a perfect choice for professionals, though the price is steep for casual use.",
     date: "2023-10-22T15:30:00Z",
     helpfulCount: 28,
     productId: 2,
@@ -130,15 +167,15 @@ export default function Home() {
   return (
     <div className="bg-gray-50">
       {/* Hero Section */}
-      <div className="relative bg-indigo-600">
+      <section className="relative bg-indigo-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
           <div className="md:w-2/3">
             <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
-              Discover the best products with trusted reviews
+              Discover Trusted Reviews & In-Depth Ratings
             </h1>
             <p className="mt-6 text-xl text-indigo-100 max-w-3xl">
-              VougeView provides honest, comprehensive reviews to help you make
-              informed purchase decisions.
+              Read honest reviews, explore top-rated products, and find the best
+              recommendations to guide your purchasing decisions.
             </p>
             <div className="mt-10 flex space-x-4">
               <Link
@@ -156,10 +193,10 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Categories Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900">Top Categories</h2>
           <Link
@@ -180,10 +217,10 @@ export default function Home() {
             />
           ))}
         </div>
-      </div>
+      </section>
 
       {/* Trending Products Section */}
-      <div className="bg-white py-12">
+      <section className="bg-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-3xl font-bold text-gray-900">
@@ -207,15 +244,14 @@ export default function Home() {
                 rating={product.rating}
                 reviewCount={product.reviewCount}
                 description={product.description}
-                price={product.price}
               />
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Latest Reviews Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900">Latest Reviews</h2>
           <Link
@@ -242,22 +278,22 @@ export default function Home() {
             />
           ))}
         </div>
-      </div>
+      </section>
 
-      {/* Call to Action */}
-      <div className="bg-indigo-700">
+      {/* Call-to-Action Section */}
+      <section className="bg-indigo-700">
         <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between">
           <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-            <span className="block">Ready to share your experience?</span>
+            <span className="block">Ready to share your review?</span>
             <span className="block text-indigo-200">
-              Write a review and help others decide.
+              Join our community of reviewers and help others decide.
             </span>
           </h2>
           <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
             <div className="inline-flex rounded-md shadow">
               <Link
                 href="/auth/signup"
-                className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-indigo-50"
+                className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 Get Started
               </Link>
@@ -265,14 +301,14 @@ export default function Home() {
             <div className="ml-3 inline-flex rounded-md shadow">
               <Link
                 href="/about"
-                className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+                className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 Learn More
               </Link>
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

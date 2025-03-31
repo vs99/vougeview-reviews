@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-
 import { toast } from "sonner";
 import {
   Card,
@@ -15,16 +14,30 @@ import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 
+// Update the interface to include the "user" property from the Review type
+interface Review {
+  id: number;
+  user: {
+    name: string;
+    image: string;
+    reviews: number;
+  };
+  rating: number;
+  title: string;
+  content: string;
+  date: string;
+  helpfulCount: number;
+  productId: number;
+  productName: string;
+  verified: boolean;
+}
+
 interface ReviewFormProps {
   productId: number;
   productName: string;
-  onSubmit: (review: {
-    rating: number;
-    title: string;
-    content: string;
-    productId: number;
-    productName: string;
-  }) => void;
+  onSubmit: (
+    review: Omit<Review, "id" | "date" | "helpfulCount" | "verified">
+  ) => void;
   onCancel?: () => void;
 }
 
@@ -62,16 +75,23 @@ const ReviewForm = ({
       return;
     }
 
-    // Submit the review
-    onSubmit({
+    // Here, we're assuming the user info will be added from the authenticated user data
+    // For now, you could hardcode a dummy user or retrieve it from context.
+    const reviewPayload = {
+      user: {
+        name: "John Doe",
+        image: "https://randomuser.me/api/portraits/men/1.jpg",
+        reviews: 10,
+      },
       rating,
       title,
       content,
       productId,
       productName,
-    });
+    };
 
-    // Show success toast
+    onSubmit(reviewPayload);
+
     toast.success("Review submitted successfully!");
 
     // Reset form
