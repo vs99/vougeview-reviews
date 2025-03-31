@@ -30,17 +30,24 @@ const LoginPage = () => {
       if (!emailRegex.test(email)) {
         throw new Error("Please enter a valid email address");
       }
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-      // Normally you would redirect on successful login
-      // For now, just log the values
-      console.log({ email, password, rememberMe });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Login failed");
+      }
 
-      // Redirect to home page
+      console.log("User logged in:", data);
+      // Optionally store user data or token (if using JWT/session)
       window.location.href = "/";
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "An error occurred during login"
-      );
+    } catch (err: any) {
+      setError(err.message);
     } finally {
       setLoading(false);
     }

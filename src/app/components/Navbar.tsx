@@ -1,8 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -11,12 +11,32 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
+} from "../components/ui/navigation-menu";
+import { Input } from "../components/ui/input";
+import { Separator } from "../components/ui/separator";
+
+interface User {
+  firstName: string;
+  // add other properties as needed
+}
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+
+  // Load user from localStorage when component mounts.
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  // Handle logout by clearing localStorage and updating state.
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setUser(null);
+  };
 
   const categories = [
     {
@@ -195,15 +215,34 @@ const Navbar = () => {
               />
             </div>
 
-            <Link href="/auth/login">
-              <Button variant="ghost" size="sm">
-                Login
-              </Button>
-            </Link>
-
-            <Link href="/auth/signup">
-              <Button size="sm">Sign up</Button>
-            </Link>
+            {user ? (
+              // If user is logged in, show logout option along with their initials.
+              <div className="flex items-center space-x-2">
+                <div className="h-8 w-8 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold">
+                  {user.firstName.charAt(0).toUpperCase()}
+                </div>
+                <span className="text-gray-800">{user.firstName}</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleLogout}
+                  className="ml-2"
+                >
+                  Logout
+                </Button>
+              </div>
+            ) : (
+              <>
+                <Link href="/auth/login">
+                  <Button variant="ghost" size="sm">
+                    Login
+                  </Button>
+                </Link>
+                <Link href="/auth/signup">
+                  <Button size="sm">Sign up</Button>
+                </Link>
+              </>
+            )}
           </div>
 
           <div className="flex items-center md:hidden">
@@ -323,17 +362,35 @@ const Navbar = () => {
             </div>
 
             <div className="flex pt-2 space-x-2">
-              <Link href="/auth/login" className="w-1/2">
-                <Button variant="outline" className="w-full" size="sm">
-                  Login
-                </Button>
-              </Link>
-
-              <Link href="/auth/signup" className="w-1/2">
-                <Button className="w-full" size="sm">
-                  Sign up
-                </Button>
-              </Link>
+              {user ? (
+                <div className="flex items-center space-x-2">
+                  <div className="h-8 w-8 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold">
+                    {user.firstName.charAt(0).toUpperCase()}
+                  </div>
+                  <span className="text-gray-800">{user.firstName}</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleLogout}
+                    className="ml-2"
+                  >
+                    Logout
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <Link href="/auth/login" className="w-1/2">
+                    <Button variant="outline" className="w-full" size="sm">
+                      Login
+                    </Button>
+                  </Link>
+                  <Link href="/auth/signup" className="w-1/2">
+                    <Button className="w-full" size="sm">
+                      Sign up
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import CategoryCard from "./components/CategoryCard";
 import ProductCard from "./components/ProductCard";
+import CategoryCard from "./components/CategoryCard";
 import ReviewCard from "./components/ReviewCard";
 
 // Mock data for categories

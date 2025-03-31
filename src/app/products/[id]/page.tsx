@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import RatingStars from "@/app/components/RatingStars";
+import React from "react";
+import RatingStars from "../../../components/RatingStars";
 import ReviewCard from "@/app/components/ReviewCard";
-import { Button } from "@/components/ui/button";
 
 // Mock products data
 const products = [
@@ -381,10 +381,10 @@ const ProductDetailPage = () => {
 
             {/* Action buttons */}
             <div className="mt-8 flex flex-col space-y-4">
-              <Button className="w-full">Buy Now</Button>
-              <Button variant="outline" className="w-full">
+              <button className="w-full">Buy Now</button>
+              <button className="w-full border border-gray-300 text-gray-900 hover:bg-gray-50">
                 Add to Wishlist
-              </Button>
+              </button>
             </div>
 
             {/* Product features */}
@@ -437,7 +437,7 @@ const ProductDetailPage = () => {
                 {product.rating} out of 5 stars
               </p>
             </div>
-            <Button>Write a Review</Button>
+            <button>Write a Review</button>
           </div>
 
           {/* Rating breakdown */}
@@ -529,7 +529,7 @@ const ProductDetailPage = () => {
                   <p className="text-gray-500">
                     No reviews yet for this product.
                   </p>
-                  <Button className="mt-4">Be the first to review</Button>
+                  <button className="mt-4">Be the first to review</button>
                 </div>
               )}
             </div>

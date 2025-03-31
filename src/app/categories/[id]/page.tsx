@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import ProductCard from "@/app/components/ProductCard";
+import React from "react";
+import ProductCard from "../../../components/ProductCard";
 
 // Mock categories data
 const categories = [

@@ -102,20 +102,29 @@ const SignupPage = () => {
         throw new Error("You must agree to the terms and conditions");
       }
 
-      // In a real app, you would make an API call to register the user
-      // For now, let's just simulate the process
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
 
-      console.log("User registration data:", formData);
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Signup failed");
+      }
 
-      // Redirect to login page
+      console.log("User registered:", data);
+      // Redirect to login or directly log the user in
       window.location.href = "/auth/login";
-    } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "An error occurred during registration"
-      );
+    } catch (err: any) {
+      setError(err.message);
     } finally {
       setLoading(false);
     }
