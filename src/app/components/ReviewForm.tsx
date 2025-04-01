@@ -15,6 +15,7 @@ import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 
 export interface Review {
+  _id?: string;
   id: number;
   user: {
     name: string;

@@ -1,13 +1,14 @@
 "use client";
-import Image from "next/image";
+import React, { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 
 interface ReviewCardProps {
-  id: number;
+  id?: string;
   user: {
     name: string;
-    image: string;
+    image?: string;
     reviews: number;
+    email?: string;
   };
   rating: number;
   title: string;
@@ -31,9 +32,28 @@ const ReviewCard = ({
   productName,
   verified,
 }: ReviewCardProps) => {
+  // Use local state for optimistic UI updates.
+  const [helpful, setHelpful] = useState(helpfulCount);
   const dateObj = new Date(date);
   const timeAgo = formatDistanceToNow(dateObj, { addSuffix: true });
 
+  // Get initials from the user name.
+  const getInitials = (name: string) => {
+    const nameParts = name.trim().split(" ");
+    if (nameParts.length === 1) {
+      return nameParts[0].charAt(0).toUpperCase();
+    }
+    return (
+      nameParts[0].charAt(0).toUpperCase() +
+      nameParts[nameParts.length - 1].charAt(0).toUpperCase()
+    );
+  };
+
+  // Format the reviews count text.
+  const reviewsCountText =
+    user.reviews === 1 ? "1 review" : `${user.reviews} reviews`;
+
+  // Render star rating icons.
   const renderStars = (rating: number) => {
     const stars = [];
     const fullStars = Math.floor(rating);
@@ -93,16 +113,36 @@ const ReviewCard = ({
     return stars;
   };
 
+  // When the Helpful button is clicked, update locally and via API.
+  const handleHelpfulClick = async () => {
+    // Optimistically update the UI.
+    setHelpful(helpful + 1);
+
+    try {
+      const res = await fetch(`/api/reviews/${id}/helpful`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!res.ok) {
+        console.error("Failed to update helpful count");
+        // Optionally: revert the optimistic update if needed.
+      }
+    } catch (error) {
+      console.error("Error updating helpful count:", error);
+      // Optionally: revert the update here.
+    }
+  };
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-md mb-4">
       <div className="flex items-start">
+        {/* Avatar using user initials */}
         <div className="relative h-10 w-10 mr-4">
-          <Image
-            src={user.image}
-            alt={user.name}
-            fill
-            className="rounded-full object-cover"
-          />
+          <div className="h-full w-full rounded-full bg-indigo-600 flex items-center justify-center">
+            <span className="text-white font-bold text-sm">
+              {getInitials(user.name)}
+            </span>
+          </div>
         </div>
         <div className="flex-1">
           <div className="flex justify-between items-start">
@@ -115,11 +155,10 @@ const ReviewCard = ({
                   </span>
                 )}
               </div>
-              <p className="text-sm text-gray-500">{user.reviews} reviews</p>
+              <p className="text-sm text-gray-500">{reviewsCountText}</p>
             </div>
             <p className="text-sm text-gray-500">{timeAgo}</p>
           </div>
-
           <div className="mt-2">
             <div className="flex items-center">
               <div className="flex">{renderStars(rating)}</div>
@@ -129,7 +168,6 @@ const ReviewCard = ({
             </div>
             <p className="mt-2 text-gray-700">{content}</p>
           </div>
-
           <div className="mt-4 text-sm">
             <p className="text-gray-500">
               Review for{" "}
@@ -141,9 +179,11 @@ const ReviewCard = ({
               </a>
             </p>
           </div>
-
           <div className="mt-4 flex items-center">
-            <button className="inline-flex items-center px-3 py-1 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <button
+              onClick={handleHelpfulClick}
+              className="inline-flex items-center px-3 py-1 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
               <svg
                 className="mr-1 h-4 w-4"
                 fill="none"
@@ -157,7 +197,7 @@ const ReviewCard = ({
                   d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"
                 />
               </svg>
-              Helpful ({helpfulCount})
+              Helpful ({helpful})
             </button>
             <button className="ml-4 text-sm text-gray-500 hover:text-gray-700">
               Report

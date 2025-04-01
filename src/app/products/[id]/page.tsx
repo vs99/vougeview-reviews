@@ -99,6 +99,7 @@ const ProductDetailPage = () => {
         const res = await fetch(`/api/reviews?productId=${productId}`);
         if (res.ok) {
           const data = await res.json();
+          console.log("Fetched reviews data:", data);
           setProductReviews(data.reviews);
         } else {
           console.error("Failed to fetch reviews", await res.json());
@@ -312,26 +313,30 @@ const ProductDetailPage = () => {
           <div className="mt-8">
             {productReviews.length > 0 ? (
               <div className="space-y-6">
-                {productReviews.map((review, index) => (
-                  <ReviewCard
-                    key={`review-${review.id}-${index}`}
-                    id={review.id}
-                    user={{
-                      name: review.user.name,
-                      image:
-                        review.user.image || "https://via.placeholder.com/150", // Use stored value (if empty, ReviewCard should handle it)
-                      reviews: review.user.reviews ?? 0,
-                    }}
-                    rating={review.rating}
-                    title={review.title}
-                    content={review.content}
-                    date={review.date}
-                    helpfulCount={review.helpfulCount}
-                    productId={review.productId}
-                    productName={review.productName}
-                    verified={review.verified}
-                  />
-                ))}
+                {productReviews.map((review, index) => {
+                  const uniqueId = review._id || review.id || `review-${index}`;
+                  return (
+                    <ReviewCard
+                      key={uniqueId} // Use the unique identifier as the key
+                      id={String(uniqueId)}
+                      user={{
+                        name: review.user?.name || "Anonymous User",
+                        image:
+                          review.user?.image ||
+                          "https://via.placeholder.com/150",
+                        reviews: review.user?.reviews || 0,
+                      }}
+                      rating={review.rating}
+                      title={review.title || ""}
+                      content={review.content || ""}
+                      date={review.date || new Date().toISOString()}
+                      helpfulCount={review.helpfulCount || 0}
+                      productId={review.productId || parseInt(id as string)}
+                      productName={review.productName || product.title}
+                      verified={review.verified || false}
+                    />
+                  );
+                })}
               </div>
             ) : (
               <div className="text-center py-12">

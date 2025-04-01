@@ -7,6 +7,7 @@ export interface IUser extends Document {
   lastName: string;
   email: string;
   password: string;
+  reviews: number; // Added field to track review count
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
@@ -18,6 +19,7 @@ const UserSchema = new Schema(
     lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    reviews: { type: Number, default: 0 }, // Default to 0 reviews
   },
   { timestamps: true }
 );
