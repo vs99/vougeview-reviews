@@ -13,7 +13,7 @@ type Product = {
   title: string;
   category: string;
   image: string;
-  rating: number;
+  rating: number; // initial/mock rating if no reviews exist
   reviewCount: number;
   description: string;
   features: string[];
@@ -68,19 +68,17 @@ const ProductDetailPage = () => {
   const reviewFormRef = useRef<HTMLDivElement>(null);
 
   // Retrieve authenticated user info from localStorage.
-  // We assume the login page stored { firstName, lastName, email, id, image, reviews }.
   const [user, setUser] = useState<User | null>(null);
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
-      // Combine firstName and lastName to create the full name.
       const fullName = `${parsedUser.firstName || ""} ${
         parsedUser.lastName || ""
       }`.trim();
       setUser({
         name: fullName || "Anonymous",
-        image: parsedUser.image || "", // no placeholder here
+        image: parsedUser.image || "",
         reviews: parsedUser.reviews ?? 0,
       });
       console.log("Retrieved user for reviews:", { fullName, ...parsedUser });
@@ -111,6 +109,38 @@ const ProductDetailPage = () => {
     fetchReviews();
   }, [id]);
 
+  // Compute aggregate rating from reviews.
+  const totalReviews = productReviews.length;
+  const averageRating =
+    totalReviews > 0
+      ? productReviews.reduce((sum, review) => sum + review.rating, 0) /
+        totalReviews
+      : product?.rating || 0;
+
+  // Compute star breakdown counts.
+  // Create an array where index 0 corresponds to 1-star, index 4 corresponds to 5-star.
+  const starCounts = [0, 0, 0, 0, 0];
+  productReviews.forEach((review) => {
+    if (review.rating >= 1 && review.rating <= 5) {
+      starCounts[review.rating - 1]++;
+    }
+  });
+  // For display, reverse so that index 0 is 5-star reviews.
+  const reversedStarCounts = [...starCounts].reverse();
+
+  // Compute Review Highlights:
+  // Filter for reviews with rating >= 3, then sort descending by rating (and date if equal), and take up to 3.
+  const highlights = productReviews
+    .filter((review) => review.rating >= 3)
+    .sort((a, b) => {
+      if (b.rating === a.rating) {
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+      }
+      return b.rating - a.rating;
+    })
+    .slice(0, 3);
+
+  // Scroll to review form.
   const scrollToReviewForm = () => {
     setShowReviewForm(true);
     setTimeout(() => {
@@ -125,8 +155,9 @@ const ProductDetailPage = () => {
     }, 100);
   };
 
+  // Handle review submission.
   const handleReviewSubmit = async (
-    newReview: Omit<Review, "id" | "date" | "helpfulCount" | "verified">
+    newReview: Omit<Review, "_id" | "id" | "date" | "helpfulCount" | "verified">
   ) => {
     try {
       const res = await fetch("/api/reviews", {
@@ -217,7 +248,7 @@ const ProductDetailPage = () => {
           {/* Product Image */}
           <div className="relative h-96 md:h-[500px] rounded-lg overflow-hidden">
             <Image
-              src={product.image}
+              src={product.image || "https://via.placeholder.com/800x600"}
               alt={product.title}
               fill
               className="object-cover"
@@ -230,10 +261,10 @@ const ProductDetailPage = () => {
               {product.title}
             </h1>
             <div className="mt-2 flex items-center">
-              <RatingStars rating={product.rating} />
-              <span className="ml-2 text-gray-500">
-                {product.rating} ({product.reviewCount} reviews)
-              </span>
+              <RatingStars rating={averageRating} />
+              <div className="ml-2 text-gray-500">
+                {averageRating.toFixed(1)} ({totalReviews} reviews)
+              </div>
             </div>
             <div className="mt-6">
               <h3 className="text-lg font-medium text-gray-900">Description</h3>
@@ -287,12 +318,73 @@ const ProductDetailPage = () => {
         {/* Reviews Section */}
         <div className="mt-16 pt-10 border-t border-gray-200">
           <h2 className="text-2xl font-bold text-gray-900">Customer Reviews</h2>
+
+          {/* Top Section: Average Rating */}
           <div className="mt-8 flex items-center justify-between">
             <div className="flex items-center">
-              <RatingStars rating={product.rating} size="lg" />
+              <RatingStars rating={averageRating} size="lg" />
               <p className="ml-3 text-lg font-medium text-gray-900">
-                {product.rating} out of 5 stars
+                {averageRating.toFixed(1)} out of 5 stars
               </p>
+            </div>
+            <button onClick={scrollToReviewForm}>Write a Review</button>
+          </div>
+
+          {/* Second Section: Rating Breakdown and Review Highlights */}
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Rating Breakdown */}
+            <div>
+              <h3 className="text-lg font-medium text-gray-900">
+                Rating Breakdown
+              </h3>
+              <div className="mt-3 space-y-2">
+                {[5, 4, 3, 2, 1].map((star, index) => {
+                  const count = reversedStarCounts[index];
+                  const percentage =
+                    totalReviews > 0 ? (count / totalReviews) * 100 : 0;
+                  return (
+                    <div key={star} className="flex items-center">
+                      <span className="w-10 text-sm font-medium text-gray-600">
+                        {star} star
+                      </span>
+                      <div className="flex-1 mx-2 h-3 bg-gray-200 rounded">
+                        <div
+                          className="h-3 bg-yellow-400 rounded"
+                          style={{ width: `${percentage}%` }}
+                        />
+                      </div>
+                      <span className="w-10 text-sm text-gray-600 text-right">
+                        {count}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Review Highlights */}
+            <div>
+              <h3 className="text-lg font-medium text-gray-900">
+                Review Highlights
+              </h3>
+              <div className="mt-3 space-y-2">
+                {highlights.map((review) => (
+                  <div
+                    key={review._id || review.id}
+                    className="border border-gray-200 rounded-md p-3"
+                  >
+                    <div className="flex items-center">
+                      <RatingStars rating={review.rating} size="sm" />
+                      <span className="ml-2 text-sm font-medium text-gray-700">
+                        {review.title}
+                      </span>
+                    </div>
+                    <p className="mt-1 text-xs text-gray-500">
+                      Reviewed on {new Date(review.date).toLocaleDateString()}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -309,46 +401,39 @@ const ProductDetailPage = () => {
             </div>
           )}
 
-          {/* Existing Reviews */}
+          {/* Recent Reviews */}
           <div className="mt-8">
-            {productReviews.length > 0 ? (
+            <h3 className="text-xl font-bold text-gray-900 mb-4">
+              Recent Reviews
+            </h3>
+            {totalReviews > 0 ? (
               <div className="space-y-6">
-                {productReviews.map((review, index) => {
-                  const uniqueId = review._id || review.id || `review-${index}`;
-                  return (
-                    <ReviewCard
-                      key={uniqueId} // Use the unique identifier as the key
-                      id={String(uniqueId)}
-                      user={{
-                        name: review.user?.name || "Anonymous User",
-                        image:
-                          review.user?.image ||
-                          "https://via.placeholder.com/150",
-                        reviews: review.user?.reviews || 0,
-                      }}
-                      rating={review.rating}
-                      title={review.title || ""}
-                      content={review.content || ""}
-                      date={review.date || new Date().toISOString()}
-                      helpfulCount={review.helpfulCount || 0}
-                      productId={review.productId || parseInt(id as string)}
-                      productName={review.productName || product.title}
-                      verified={review.verified || false}
-                    />
-                  );
-                })}
+                {productReviews.map((review, index) => (
+                  <ReviewCard
+                    key={review._id || review.id || `review-${index}`}
+                    id={String(review._id || review.id || `review-${index}`)}
+                    user={{
+                      name: review.user?.name || "Anonymous User",
+                      image:
+                        review.user?.image || "https://via.placeholder.com/150",
+                      reviews: review.user?.reviews || 0,
+                    }}
+                    rating={review.rating}
+                    title={review.title || ""}
+                    content={review.content || ""}
+                    date={review.date || new Date().toISOString()}
+                    helpfulCount={review.helpfulCount || 0}
+                    productId={review.productId}
+                    productName={review.productName || product.title}
+                    verified={review.verified || false}
+                  />
+                ))}
               </div>
             ) : (
               <div className="text-center py-12">
                 <p className="text-gray-500">
                   No reviews yet for this product.
                 </p>
-                <button
-                  onClick={scrollToReviewForm}
-                  className="mt-4 inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
-                >
-                  Be the first to review
-                </button>
               </div>
             )}
           </div>
