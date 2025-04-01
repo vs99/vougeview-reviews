@@ -20,13 +20,22 @@ const Navbar = () => {
     }
   }, []);
 
+  // Calculate initials from firstName and lastName
+  const getInitials = () => {
+    if (!user) return "";
+    const firstInitial = user.firstName
+      ? user.firstName.charAt(0).toUpperCase()
+      : "";
+    const lastInitial = user.lastName
+      ? user.lastName.charAt(0).toUpperCase()
+      : "";
+    return `${firstInitial}${lastInitial}`;
+  };
+
   const handleLogout = async () => {
-    // Optionally, call the logout API route
     await fetch("/api/auth/logout", { method: "POST" });
-    // Remove user info from localStorage and update state
     localStorage.removeItem("user");
     setUser(null);
-    // Optionally redirect to login page
     window.location.href = "/auth/login";
   };
 
@@ -43,9 +52,8 @@ const Navbar = () => {
           {user ? (
             <div className="flex items-center space-x-2">
               <div className="h-8 w-8 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold">
-                {user.firstName.charAt(0).toUpperCase()}
+                {getInitials()}
               </div>
-              <span className="text-gray-700">{user.firstName}</span>
               <Button size="sm" onClick={handleLogout}>
                 Logout
               </Button>
@@ -112,9 +120,8 @@ const Navbar = () => {
           {user ? (
             <div className="flex items-center space-x-2 py-2">
               <div className="h-8 w-8 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold">
-                {user.firstName.charAt(0).toUpperCase()}
+                {getInitials()}
               </div>
-              <span className="text-gray-700">{user.firstName}</span>
               <Button size="sm" onClick={handleLogout}>
                 Logout
               </Button>

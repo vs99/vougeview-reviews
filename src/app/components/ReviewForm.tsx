@@ -14,13 +14,12 @@ import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 
-// Update the interface to include the "user" property from the Review type
-interface Review {
+export interface Review {
   id: number;
   user: {
     name: string;
-    image: string;
-    reviews: number;
+    image?: string;
+    reviews?: number;
   };
   rating: number;
   title: string;
@@ -32,9 +31,16 @@ interface Review {
   verified: boolean;
 }
 
+export type User = {
+  name: string;
+  image?: string;
+  reviews?: number;
+};
+
 interface ReviewFormProps {
   productId: number;
   productName: string;
+  user: User;
   onSubmit: (
     review: Omit<Review, "id" | "date" | "helpfulCount" | "verified">
   ) => void;
@@ -44,6 +50,7 @@ interface ReviewFormProps {
 const ReviewForm = ({
   productId,
   productName,
+  user,
   onSubmit,
   onCancel,
 }: ReviewFormProps) => {
@@ -56,33 +63,24 @@ const ReviewForm = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate form
     if (rating === 0) {
       setError("Please select a rating");
       toast.error("Please select a rating");
       return;
     }
-
     if (title.trim() === "") {
       setError("Please enter a review title");
       toast.error("Please enter a review title");
       return;
     }
-
     if (content.trim() === "") {
       setError("Please enter review content");
       toast.error("Please enter review content");
       return;
     }
 
-    // Here, we're assuming the user info will be added from the authenticated user data
-    // For now, you could hardcode a dummy user or retrieve it from context.
     const reviewPayload = {
-      user: {
-        name: "John Doe",
-        image: "https://randomuser.me/api/portraits/men/1.jpg",
-        reviews: 10,
-      },
+      user, // user from props; must include a valid name
       rating,
       title,
       content,
@@ -91,7 +89,6 @@ const ReviewForm = ({
     };
 
     onSubmit(reviewPayload);
-
     toast.success("Review submitted successfully!");
 
     // Reset form

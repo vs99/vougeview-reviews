@@ -1,15 +1,13 @@
-// app/products/[id]/page.tsx
 "use client";
-
 import { useParams } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import RatingStars from "../../components/RatingStars";
 import ReviewCard from "@/app/components/ReviewCard";
-import ReviewForm from "@/app/components/ReviewForm";
+import ReviewForm, { Review, User } from "@/app/components/ReviewForm";
 
-// Define TypeScript types
+// Define Product type
 type Product = {
   id: number;
   title: string;
@@ -24,24 +22,7 @@ type Product = {
   longDescription: string;
 };
 
-type Review = {
-  id: number;
-  user: {
-    name: string;
-    image: string;
-    reviews: number;
-  };
-  rating: number;
-  title: string;
-  content: string;
-  date: string;
-  helpfulCount: number;
-  productId: number;
-  productName: string;
-  verified: boolean;
-};
-
-// Mock data for products
+// Mock product data (replace with real API calls later)
 const products: Product[] = [
   {
     id: 1,
@@ -74,45 +55,7 @@ const products: Product[] = [
     longDescription:
       "Advanced Night Repair Synchronized Multi-Recovery Complex is a revolutionary anti-aging serum that works at night when your skin naturally renews. It dramatically reduces the look of lines and wrinkles and improves skin radiance.",
   },
-  // Additional products can be added here.
-];
-
-// Mock data for reviews
-const initialReviews: Review[] = [
-  {
-    id: 1,
-    user: {
-      name: "Sarah Johnson",
-      image: "https://randomuser.me/api/portraits/women/44.jpg",
-      reviews: 28,
-    },
-    rating: 5,
-    title: "Absolutely beautiful results!",
-    content:
-      "I've been using this serum for a month and the results are incredible. My skin looks more radiant.",
-    date: "2023-11-15T12:00:00Z",
-    helpfulCount: 42,
-    productId: 1,
-    productName: "Advanced Night Repair Serum",
-    verified: true,
-  },
-  {
-    id: 2,
-    user: {
-      name: "Michael Chen",
-      image: "https://randomuser.me/api/portraits/men/22.jpg",
-      reviews: 14,
-    },
-    rating: 4.5,
-    title: "Great product, but could be improved",
-    content:
-      "The serum works well, but I wish it came in a larger size. Still, my skin feels smoother and more radiant.",
-    date: "2023-10-22T15:30:00Z",
-    helpfulCount: 28,
-    productId: 1,
-    productName: "Advanced Night Repair Serum",
-    verified: true,
-  },
+  // Add more products as needed.
 ];
 
 const ProductDetailPage = () => {
@@ -122,48 +65,86 @@ const ProductDetailPage = () => {
   const [selectedVariant, setSelectedVariant] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [showReviewForm, setShowReviewForm] = useState(false);
-  // Create a ref for the review form container
   const reviewFormRef = useRef<HTMLDivElement>(null);
 
+  // Retrieve authenticated user info from localStorage.
+  // We assume the login page stored { firstName, lastName, email, id, image, reviews }.
+  const [user, setUser] = useState<User | null>(null);
   useEffect(() => {
-    const fetchData = async () => {
-      const productId = parseInt(id as string);
-      const foundProduct = products.find((p) => p.id === productId) || null;
-      const foundReviews = initialReviews.filter(
-        (r) => r.productId === productId
-      );
-      setProduct(foundProduct);
-      setProductReviews(foundReviews);
-      if (foundProduct?.variants && foundProduct.variants.length > 0) {
-        setSelectedVariant(foundProduct.variants[0]);
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      // Combine firstName and lastName to create the full name.
+      const fullName = `${parsedUser.firstName || ""} ${
+        parsedUser.lastName || ""
+      }`.trim();
+      setUser({
+        name: fullName || "Anonymous",
+        image: parsedUser.image || "", // no placeholder here
+        reviews: parsedUser.reviews ?? 0,
+      });
+      console.log("Retrieved user for reviews:", { fullName, ...parsedUser });
+    }
+  }, []);
+
+  useEffect(() => {
+    const productId = parseInt(id as string);
+    const foundProduct = products.find((p) => p.id === productId) || null;
+    setProduct(foundProduct);
+    setLoading(false);
+
+    // Fetch reviews from the backend API
+    const fetchReviews = async () => {
+      try {
+        const res = await fetch(`/api/reviews?productId=${productId}`);
+        if (res.ok) {
+          const data = await res.json();
+          setProductReviews(data.reviews);
+        } else {
+          console.error("Failed to fetch reviews", await res.json());
+        }
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
       }
-      setLoading(false);
     };
-    fetchData();
+    fetchReviews();
   }, [id]);
 
-  // Scroll to the review form when "Write a Review" is clicked.
   const scrollToReviewForm = () => {
     setShowReviewForm(true);
-    // Wait for the form to be rendered before scrolling.
     setTimeout(() => {
-      reviewFormRef.current?.scrollIntoView({ behavior: "smooth" });
+      if (reviewFormRef.current) {
+        const yOffset = -80;
+        const y =
+          reviewFormRef.current.getBoundingClientRect().top +
+          window.pageYOffset +
+          yOffset;
+        window.scrollTo({ top: y, behavior: "smooth" });
+      }
     }, 100);
   };
 
-  // Handler for new review submission
-  const handleReviewSubmit = (
+  const handleReviewSubmit = async (
     newReview: Omit<Review, "id" | "date" | "helpfulCount" | "verified">
   ) => {
-    const reviewToAdd: Review = {
-      ...newReview,
-      id: Date.now(), // generate a unique id
-      date: new Date().toISOString(),
-      helpfulCount: 0,
-      verified: false,
-    };
-    setProductReviews((prev) => [reviewToAdd, ...prev]);
-    setShowReviewForm(false);
+    try {
+      const res = await fetch("/api/reviews", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newReview),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        console.log("New review added:", data.review);
+        setProductReviews((prev) => [data.review, ...prev]);
+        setShowReviewForm(false);
+      } else {
+        const errorData = await res.json();
+        console.error("Failed to submit review", errorData);
+      }
+    } catch (error) {
+      console.error("Error submitting review:", error);
+    }
   };
 
   if (loading) {
@@ -263,9 +244,9 @@ const ProductDetailPage = () => {
               <div className="mt-6">
                 <h3 className="text-lg font-medium text-gray-900">Options</h3>
                 <div className="mt-2 grid grid-cols-3 gap-4">
-                  {product.variants.map((variant: any) => (
+                  {product.variants.map((variant: any, index: number) => (
                     <button
-                      key={variant.id}
+                      key={`${variant.id}-${index}`}
                       onClick={() => setSelectedVariant(variant)}
                       className={`border rounded-md py-2 px-3 text-sm font-medium ${
                         selectedVariant?.id === variant.id
@@ -284,7 +265,7 @@ const ProductDetailPage = () => {
             <div className="mt-8">
               <button
                 onClick={scrollToReviewForm}
-                className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
               >
                 Write a Review
               </button>
@@ -315,11 +296,12 @@ const ProductDetailPage = () => {
           </div>
 
           {/* Review Form with scroll-to behavior */}
-          {showReviewForm && (
+          {showReviewForm && user && (
             <div ref={reviewFormRef} className="mt-8">
               <ReviewForm
                 productId={product.id}
                 productName={product.title}
+                user={user}
                 onSubmit={handleReviewSubmit}
                 onCancel={() => setShowReviewForm(false)}
               />
@@ -330,11 +312,16 @@ const ProductDetailPage = () => {
           <div className="mt-8">
             {productReviews.length > 0 ? (
               <div className="space-y-6">
-                {productReviews.map((review) => (
+                {productReviews.map((review, index) => (
                   <ReviewCard
-                    key={review.id}
+                    key={`review-${review.id}-${index}`}
                     id={review.id}
-                    user={review.user}
+                    user={{
+                      name: review.user.name,
+                      image:
+                        review.user.image || "https://via.placeholder.com/150", // Use stored value (if empty, ReviewCard should handle it)
+                      reviews: review.user.reviews ?? 0,
+                    }}
                     rating={review.rating}
                     title={review.title}
                     content={review.content}
@@ -353,7 +340,7 @@ const ProductDetailPage = () => {
                 </p>
                 <button
                   onClick={scrollToReviewForm}
-                  className="mt-4 inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="mt-4 inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
                 >
                   Be the first to review
                 </button>
