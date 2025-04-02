@@ -13,6 +13,7 @@ type Category = {
   name: string;
   image: string;
   productCount: number;
+  description: string;
 };
 
 type Product = {
@@ -43,43 +44,18 @@ type Review = {
   verified: boolean;
 };
 
-// Mock data for categories (still using mock data)
-const categories: Category[] = [
-  {
-    id: "beauty",
-    name: "Beauty",
-    image:
-      "https://images.unsplash.com/photo-1596462502278-27bfdc403348?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    productCount: 120,
-  },
-  {
-    id: "cars",
-    name: "Cars",
-    image:
-      "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    productCount: 75,
-  },
-  {
-    id: "electronics",
-    name: "Electronics",
-    image:
-      "https://images.unsplash.com/photo-1550009158-9ebf69173e03?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    productCount: 200,
-  },
-  {
-    id: "home-garden",
-    name: "Home & Garden",
-    image:
-      "https://images.unsplash.com/photo-1615529328331-f8917597711f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    productCount: 150,
-  },
-];
-
-// Home page component
 export default function Home() {
-  // Products will be fetched from the DB.
+  // Products fetched from DB.
   const [productsData, setProductsData] = useState<Product[]>([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
+
+  // Categories fetched from DB.
+  const [categoriesData, setCategoriesData] = useState<Category[]>([]);
+  const [loadingCategories, setLoadingCategories] = useState(true);
+
+  // Reviews (you can leave this as is or update similarly)
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loadingReviews, setLoadingReviews] = useState(true);
 
   // Fetch products from DB via API on component mount
   useEffect(() => {
@@ -113,9 +89,38 @@ export default function Home() {
     fetchProducts();
   }, []);
 
+  // Fetch categories from DB via API on component mount
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch("/api/categories");
+        if (res.ok) {
+          const data = await res.json();
+          // Assuming your API returns { categories: [...] }
+          const mappedCategories: Category[] = data.categories.map(
+            (c: any) => ({
+              id: c._id.toString(),
+              name: c.name,
+              image: c.image,
+              productCount: c.productCount,
+              description: c.description,
+            })
+          );
+          setCategoriesData(mappedCategories);
+        } else {
+          console.error("Failed to fetch categories", await res.json());
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      } finally {
+        setLoadingCategories(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   // Fetch reviews from DB via API on component mount
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [loadingReviews, setLoadingReviews] = useState(true);
   useEffect(() => {
     const fetchReviews = async () => {
       try {
@@ -184,17 +189,21 @@ export default function Home() {
             View All Categories
           </Link>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {categories.map((category) => (
-            <CategoryCard
-              key={category.id}
-              id={category.id}
-              name={category.name}
-              image={category.image}
-              productCount={category.productCount}
-            />
-          ))}
-        </div>
+        {loadingCategories ? (
+          <div>Loading categories...</div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {categoriesData.slice(0, 4).map((category) => (
+              <CategoryCard
+                key={category.id}
+                id={category.id}
+                name={category.name}
+                image={category.image}
+                productCount={category.productCount}
+              />
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Trending Products Section */}
