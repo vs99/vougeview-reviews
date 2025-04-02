@@ -34,7 +34,7 @@
     "app/**/*",
     "next-env.d.ts",
     ".next/types/**/*.ts"
-  ],
+, "scripts/seedProducts.js"  ],
   "exclude": [
     "node_modules"
   ]

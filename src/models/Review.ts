@@ -14,7 +14,7 @@ export interface Review {
     content: string;
     date: string;
     helpfulCount: number;
-    productId: number;
+    productId: string;
     productName: string;
     verified: boolean;
   }
@@ -31,7 +31,7 @@ const ReviewSchema: Schema = new Schema({
   content: { type: String, required: true },
   date: { type: Date, default: Date.now },
   helpfulCount: { type: Number, default: 0 },
-  productId: { type: Number, required: true },
+  productId: { type: String, required: true },
   productName: { type: String, required: true },
   verified: { type: Boolean, default: false },
 });

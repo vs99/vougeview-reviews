@@ -1,6 +1,8 @@
-// app/page.tsx
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 import ProductCard from "./components/ProductCard";
 import CategoryCard from "./components/CategoryCard";
 import ReviewCard from "./components/ReviewCard";
@@ -14,7 +16,7 @@ type Category = {
 };
 
 type Product = {
-  id: number;
+  id: string; // We'll convert _id to string
   title: string;
   category: string;
   image: string;
@@ -41,7 +43,7 @@ type Review = {
   verified: boolean;
 };
 
-// Mock data for categories
+// Mock data for categories (still using mock data)
 const categories: Category[] = [
   {
     id: "beauty",
@@ -73,97 +75,73 @@ const categories: Category[] = [
   },
 ];
 
-// Mock data for products
-const products: Product[] = [
-  {
-    id: 1,
-    title: "Advanced Night Repair Serum",
-    category: "Beauty",
-    image:
-      "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    rating: 4.8,
-    reviewCount: 352,
-    description:
-      "Our Advanced Night Repair Serum utilizes a synchronized multi-recovery complex to reduce signs of aging and reveal radiant skin.",
-    price: "$75.00",
-  },
-  {
-    id: 2,
-    title: "Pro Display XDR Monitor",
-    category: "Electronics",
-    image:
-      "https://images.unsplash.com/photo-1616763355548-1b606f439f86?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    rating: 4.9,
-    reviewCount: 127,
-    description:
-      "Experience breathtaking visuals with a professional-grade display featuring Retina 6K resolution and incredible HDR performance.",
-    price: "$4,999.00",
-  },
-  {
-    id: 3,
-    title: "Luxury Down Comforter",
-    category: "Home & Garden",
-    image:
-      "https://images.unsplash.com/photo-1613977257363-707ba9348227?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    rating: 4.7,
-    reviewCount: 208,
-    description:
-      "Stay warm in style with our premium all-season down comforter, designed for maximum loft and cozy comfort.",
-    price: "$199.00",
-  },
-  {
-    id: 4,
-    title: "Model X SUV",
-    category: "Cars",
-    image:
-      "https://images.unsplash.com/photo-1633240188018-1100c307e445?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    rating: 4.6,
-    reviewCount: 95,
-    description:
-      "Discover cutting-edge electric performance with the Model X SUV featuring innovative design and advanced safety features.",
-    price: "$79,990",
-  },
-];
-
-// Mock data for reviews
-const reviews: Review[] = [
-  {
-    id: 1,
-    user: {
-      name: "Sarah Johnson",
-      image: "https://randomuser.me/api/portraits/women/44.jpg",
-      reviews: 28,
-    },
-    rating: 5,
-    title: "Absolutely beautiful results!",
-    content:
-      "I have been using this serum for a month and the difference is remarkable. My skin is brighter, and fine lines are visibly reduced. Highly recommended for anyone serious about skincare.",
-    date: "2023-11-15T12:00:00Z",
-    helpfulCount: 42,
-    productId: 1,
-    productName: "Advanced Night Repair Serum",
-    verified: true,
-  },
-  {
-    id: 2,
-    user: {
-      name: "Michael Chen",
-      image: "https://randomuser.me/api/portraits/men/22.jpg",
-      reviews: 14,
-    },
-    rating: 4.5,
-    title: "Great display, but a premium price",
-    content:
-      "The Pro Display XDR is stunning with its 6K resolution and color accuracy. It’s a perfect choice for professionals, though the price is steep for casual use.",
-    date: "2023-10-22T15:30:00Z",
-    helpfulCount: 28,
-    productId: 2,
-    productName: "Pro Display XDR Monitor",
-    verified: true,
-  },
-];
-
+// Home page component
 export default function Home() {
+  // Products will be fetched from the DB.
+  const [productsData, setProductsData] = useState<Product[]>([]);
+  const [loadingProducts, setLoadingProducts] = useState(true);
+
+  // Fetch products from DB via API on component mount
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch("/api/products");
+        if (res.ok) {
+          const data = await res.json();
+          // Map _id to id if needed
+          const mappedProducts: Product[] = data.products.map((p: any) => ({
+            id: p._id.toString(),
+            title: p.title,
+            category: p.category,
+            image: p.image,
+            rating: p.rating,
+            reviewCount: p.reviewCount,
+            description: p.description,
+            price: p.price,
+          }));
+          setProductsData(mappedProducts);
+        } else {
+          console.error("Failed to fetch products", await res.json());
+        }
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoadingProducts(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  // Fetch reviews from DB via API on component mount
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loadingReviews, setLoadingReviews] = useState(true);
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const res = await fetch("/api/reviews");
+        if (res.ok) {
+          const data = await res.json();
+          // Sort reviews by date descending (newest first) and take top 10
+          const sortedReviews = data.reviews.sort(
+            (a: Review, b: Review) =>
+              new Date(b.date).getTime() - new Date(a.date).getTime()
+          );
+          const top10Reviews = sortedReviews.slice(0, 10);
+          setReviews(top10Reviews);
+        } else {
+          console.error("Failed to fetch reviews", await res.json());
+        }
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      } finally {
+        setLoadingReviews(false);
+      }
+    };
+
+    fetchReviews();
+  }, []);
+
   return (
     <div className="bg-gray-50">
       {/* Hero Section */}
@@ -233,20 +211,24 @@ export default function Home() {
               View All Products
             </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {products.map((product) => (
-              <ProductCard
-                key={product.id}
-                id={product.id}
-                title={product.title}
-                category={product.category}
-                image={product.image}
-                rating={product.rating}
-                reviewCount={product.reviewCount}
-                description={product.description}
-              />
-            ))}
-          </div>
+          {loadingProducts ? (
+            <div>Loading products...</div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {productsData.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  id={product.id}
+                  title={product.title}
+                  category={product.category}
+                  image={product.image}
+                  rating={product.rating}
+                  reviewCount={product.reviewCount}
+                  description={product.description}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -261,23 +243,31 @@ export default function Home() {
             View All Reviews
           </Link>
         </div>
-        <div className="space-y-4">
-          {reviews.map((review) => (
-            <ReviewCard
-              key={review.id}
-              id={review.id}
-              user={review.user}
-              rating={review.rating}
-              title={review.title}
-              content={review.content}
-              date={review.date}
-              helpfulCount={review.helpfulCount}
-              productId={review.productId}
-              productName={review.productName}
-              verified={review.verified}
-            />
-          ))}
-        </div>
+        {loadingReviews ? (
+          <div>Loading reviews...</div>
+        ) : (
+          <div className="space-y-4">
+            {reviews.length > 0 ? (
+              reviews.map((review) => (
+                <ReviewCard
+                  key={String(review.id || (review as any)._id)}
+                  id={String(review.id || (review as any)._id)}
+                  user={review.user}
+                  rating={review.rating}
+                  title={review.title}
+                  content={review.content}
+                  date={review.date}
+                  helpfulCount={review.helpfulCount}
+                  productId={review.productId}
+                  productName={review.productName}
+                  verified={review.verified}
+                />
+              ))
+            ) : (
+              <p className="text-gray-500">No reviews available.</p>
+            )}
+          </div>
+        )}
       </section>
 
       {/* Call-to-Action Section */}

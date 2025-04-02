@@ -38,13 +38,12 @@ export type User = {
   reviews?: number;
 };
 
+// src/app/components/ReviewForm.tsx
 interface ReviewFormProps {
-  productId: number;
+  productId: string | number; // Accept both string and number
   productName: string;
-  user: User;
-  onSubmit: (
-    review: Omit<Review, "id" | "date" | "helpfulCount" | "verified">
-  ) => void;
+  user?: User;
+  onSubmit: (review: any) => void;
   onCancel?: () => void;
 }
 

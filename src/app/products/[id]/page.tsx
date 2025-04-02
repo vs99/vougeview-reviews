@@ -1,4 +1,5 @@
 "use client";
+
 import { useParams } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
@@ -7,13 +8,13 @@ import RatingStars from "../../components/RatingStars";
 import ReviewCard from "@/app/components/ReviewCard";
 import ReviewForm, { Review, User } from "@/app/components/ReviewForm";
 
-// Define Product type
+// Updated Product type: id is a string
 type Product = {
-  id: number;
+  id: string;
   title: string;
   category: string;
   image: string;
-  rating: number; // initial/mock rating if no reviews exist
+  rating: number;
   reviewCount: number;
   description: string;
   features: string[];
@@ -22,44 +23,8 @@ type Product = {
   longDescription: string;
 };
 
-// Mock product data (replace with real API calls later)
-const products: Product[] = [
-  {
-    id: 1,
-    title: "Advanced Night Repair Serum",
-    category: "Beauty",
-    image:
-      "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    rating: 4.8,
-    reviewCount: 352,
-    description:
-      "Advanced Night Repair Synchronized Multi-Recovery Complex. Reduces multiple signs of aging.",
-    features: [
-      "Patented synchronization technology",
-      "Reduces fine lines and wrinkles",
-      "Improves radiance",
-      "Strengthens skin barrier",
-      "Oil-free formula",
-    ],
-    details: [
-      { label: "Size", value: "30ml" },
-      { label: "Item Form", value: "Serum" },
-      { label: "Skin Type", value: "All Skin Types" },
-      { label: "Brand", value: "Estée Lauder" },
-    ],
-    variants: [
-      { id: 101, size: "30ml", price: "$75.00" },
-      { id: 102, size: "50ml", price: "$105.00" },
-      { id: 103, size: "100ml", price: "$185.00" },
-    ],
-    longDescription:
-      "Advanced Night Repair Synchronized Multi-Recovery Complex is a revolutionary anti-aging serum that works at night when your skin naturally renews. It dramatically reduces the look of lines and wrinkles and improves skin radiance.",
-  },
-  // Add more products as needed.
-];
-
 const ProductDetailPage = () => {
-  const { id } = useParams();
+  const { id } = useParams(); // product id from URL (as string)
   const [product, setProduct] = useState<Product | null>(null);
   const [productReviews, setProductReviews] = useState<Review[]>([]);
   const [selectedVariant, setSelectedVariant] = useState<any>(null);
@@ -85,28 +50,54 @@ const ProductDetailPage = () => {
     }
   }, []);
 
+  // Fetch product details from the DB
   useEffect(() => {
-    const productId = parseInt(id as string);
-    const foundProduct = products.find((p) => p.id === productId) || null;
-    setProduct(foundProduct);
-    setLoading(false);
-
-    // Fetch reviews from the backend API
-    const fetchReviews = async () => {
+    const fetchProduct = async () => {
       try {
-        const res = await fetch(`/api/reviews?productId=${productId}`);
+        if (!id) return;
+        const res = await fetch(`/api/products/${id}`);
         if (res.ok) {
           const data = await res.json();
-          console.log("Fetched reviews data:", data);
-          setProductReviews(data.reviews);
+          setProduct(data.product);
         } else {
-          console.error("Failed to fetch reviews", await res.json());
+          const errorText = await res.text();
+          console.error("Failed to fetch product", errorText);
         }
       } catch (error) {
-        console.error("Error fetching reviews:", error);
+        console.error("Error fetching product:", error);
+      } finally {
+        setLoading(false);
       }
     };
-    fetchReviews();
+
+    if (id) {
+      fetchProduct();
+    }
+  }, [id]);
+
+  // Function to fetch reviews for the current product from the DB
+  const fetchReviews = async () => {
+    try {
+      if (!id) return;
+      const res = await fetch(`/api/reviews?productId=${id}`);
+      if (res.ok) {
+        const data = await res.json();
+        console.log("Fetched reviews data:", data);
+        setProductReviews(data.reviews || []);
+      } else {
+        const errorText = await res.text();
+        console.error("Failed to fetch reviews", errorText);
+      }
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+    }
+  };
+
+  // Fetch reviews on mount (and when id changes)
+  useEffect(() => {
+    if (id) {
+      fetchReviews();
+    }
   }, [id]);
 
   // Compute aggregate rating from reviews.
@@ -115,21 +106,19 @@ const ProductDetailPage = () => {
     totalReviews > 0
       ? productReviews.reduce((sum, review) => sum + review.rating, 0) /
         totalReviews
-      : product?.rating || 0;
+      : 0;
 
   // Compute star breakdown counts.
-  // Create an array where index 0 corresponds to 1-star, index 4 corresponds to 5-star.
-  const starCounts = [0, 0, 0, 0, 0];
+  const starCounts = [0, 0, 0, 0, 0]; // index 0 => 1 star, index 4 => 5 star
   productReviews.forEach((review) => {
     if (review.rating >= 1 && review.rating <= 5) {
       starCounts[review.rating - 1]++;
     }
   });
-  // For display, reverse so that index 0 is 5-star reviews.
+  // Reverse so that index 0 corresponds to 5-star reviews.
   const reversedStarCounts = [...starCounts].reverse();
 
   // Compute Review Highlights:
-  // Filter for reviews with rating >= 3, then sort descending by rating (and date if equal), and take up to 3.
   const highlights = productReviews
     .filter((review) => review.rating >= 3)
     .sort((a, b) => {
@@ -160,15 +149,23 @@ const ProductDetailPage = () => {
     newReview: Omit<Review, "_id" | "id" | "date" | "helpfulCount" | "verified">
   ) => {
     try {
+      // Use the id from useParams (which is a string) as productId.
+      const reviewData = {
+        ...newReview,
+        productId: id,
+      };
+
       const res = await fetch("/api/reviews", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newReview),
+        body: JSON.stringify(reviewData),
       });
+
       if (res.ok) {
         const data = await res.json();
         console.log("New review added:", data.review);
-        setProductReviews((prev) => [data.review, ...prev]);
+        // Re-fetch reviews so the new one appears immediately.
+        await fetchReviews();
         setShowReviewForm(false);
       } else {
         const errorData = await res.json();
@@ -327,7 +324,12 @@ const ProductDetailPage = () => {
                 {averageRating.toFixed(1)} out of 5 stars
               </p>
             </div>
-            <button onClick={scrollToReviewForm}>Write a Review</button>
+            <button
+              onClick={scrollToReviewForm}
+              className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
+            >
+              Write a Review
+            </button>
           </div>
 
           {/* Second Section: Rating Breakdown and Review Highlights */}
@@ -370,7 +372,7 @@ const ProductDetailPage = () => {
               <div className="mt-3 space-y-2">
                 {highlights.map((review) => (
                   <div
-                    key={review._id || review.id}
+                    key={String(review.id)}
                     className="border border-gray-200 rounded-md p-3"
                   >
                     <div className="flex items-center">
@@ -410,8 +412,12 @@ const ProductDetailPage = () => {
               <div className="space-y-6">
                 {productReviews.map((review, index) => (
                   <ReviewCard
-                    key={review._id || review.id || `review-${index}`}
-                    id={String(review._id || review.id || `review-${index}`)}
+                    key={String(
+                      review.id || (review as any)._id || `review-${index}`
+                    )}
+                    id={String(
+                      review.id || (review as any)._id || `review-${index}`
+                    )}
                     user={{
                       name: review.user?.name || "Anonymous User",
                       image:
