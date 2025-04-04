@@ -377,7 +377,7 @@ const ProductDetailPage = () => {
                 {highlights.map((review, index) => (
                   <div
                     key={String(
-                      review.id || (review as any)._id || `highlight-${index}`
+                      review.id || review._id || `highlight-${index}`
                     )}
                     className="border border-[#E0D4C7] rounded-md p-3"
                   >
@@ -418,12 +418,8 @@ const ProductDetailPage = () => {
               <div className="space-y-6">
                 {productReviews.map((review, index) => (
                   <ReviewCard
-                    key={String(
-                      review.id || (review as any)._id || `review-${index}`
-                    )}
-                    id={String(
-                      review.id || (review as any)._id || `review-${index}`
-                    )}
+                    key={String(review.id || review._id || `review-${index}`)}
+                    id={String(review.id || review._id || `review-${index}`)}
                     user={{
                       name: review.user?.name || "Anonymous User",
                       image:
