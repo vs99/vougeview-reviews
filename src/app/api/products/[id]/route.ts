@@ -1,12 +1,16 @@
-// app/api/products/[id]/route.ts
-import { NextResponse } from 'next/server';
+// src/app/api/products/[id]/route.ts
+import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import Product from '@/models/Product';
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+// Fix the type signature to use NextRequest
+export async function GET(
+  request: NextRequest, 
+  context: { params: { id: string } }
+) {
   try {
     await dbConnect();
-    const product = await Product.findById(params.id);
+    const product = await Product.findById(context.params.id);
     if (!product) {
       return NextResponse.json(
         { success: false, error: 'Product not found' },
@@ -14,9 +18,10 @@ export async function GET(request: Request, { params }: { params: { id: string }
       );
     }
     return NextResponse.json({ success: true, product });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
-      { success: false, error: error.message },
+      { success: false, error: errorMessage },
       { status: 500 }
     );
   }
