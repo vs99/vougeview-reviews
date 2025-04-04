@@ -207,6 +207,7 @@ export default function Home() {
       </section>
 
       {/* Trending Products Section */}
+      {/* Trending Products Section */}
       <section className="bg-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-8">
@@ -224,31 +225,33 @@ export default function Home() {
             <div>Loading products...</div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {productsData.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  id={product.id}
-                  title={product.title}
-                  category={product.category}
-                  image={product.image}
-                  rating={product.rating}
-                  reviewCount={product.reviewCount}
-                  description={product.description}
-                />
-              ))}
+              {productsData
+                .sort((a, b) => b.rating - a.rating) // Sort descending by rating
+                .slice(0, 4) // Take only the top 4
+                .map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    id={product.id}
+                    title={product.title}
+                    category={product.category}
+                    image={product.image}
+                    rating={product.rating}
+                    reviewCount={product.reviewCount}
+                    description={product.description}
+                  />
+                ))}
             </div>
           )}
         </div>
       </section>
 
       {/* Latest Reviews Section */}
-      {/* Latest Reviews Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900">Latest Reviews</h2>
           <Link
             href="/reviews"
-            className="text-indigo-600 hover:text-indigo-800 font-medium"
+            className="text-[#8B6E4E] hover:text-[#654E3E]  font-medium"
           >
             View All Reviews
           </Link>

@@ -216,7 +216,6 @@ const ProductDetailPage = () => {
   return (
     <div className="bg-[#F9F5F0]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Breadcrumbs */}
         <nav className="flex mb-8" aria-label="Breadcrumb">
           <ol className="flex items-center space-x-2">
             <li>
@@ -227,7 +226,7 @@ const ProductDetailPage = () => {
             <li>
               <span className="text-[#E0D4C7] mx-2">/</span>
               <Link
-                href={`/categories/${product.category.toLowerCase()}`}
+                href="/categories"
                 className="text-[#5A5A5A] hover:text-[#8B6E4E]"
               >
                 {product.category}
@@ -239,7 +238,6 @@ const ProductDetailPage = () => {
             </li>
           </ol>
         </nav>
-
         {/* Product Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Product Image */}
@@ -270,6 +268,18 @@ const ProductDetailPage = () => {
               <p className="mt-2 text-[#5A5A5A]">{product.description}</p>
             </div>
 
+            {/* Features Section */}
+            {product.features && product.features.length > 0 && (
+              <div className="mt-6">
+                <h3 className="text-lg font-medium text-[#333333]">Features</h3>
+                <ul className="mt-2 list-disc list-inside text-[#5A5A5A]">
+                  {product.features.map((feature, index) => (
+                    <li key={index}>{feature}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             {/* Variants (if any) */}
             {product.variants && product.variants.length > 0 && (
               <div className="mt-6">
@@ -291,19 +301,8 @@ const ProductDetailPage = () => {
                 </div>
               </div>
             )}
-
-            {/* Write a Review Button */}
-            <div className="mt-8">
-              <button
-                onClick={scrollToReviewForm}
-                className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#8B6E4E] hover:bg-[#654E3E] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B6E4E]"
-              >
-                Write a Review
-              </button>
-            </div>
           </div>
         </div>
-
         {/* Long Description */}
         <div className="mt-16">
           <h2 className="text-2xl font-bold text-[#333333]">
@@ -313,7 +312,6 @@ const ProductDetailPage = () => {
             <p>{product.longDescription}</p>
           </div>
         </div>
-
         {/* Reviews Section */}
         <div className="mt-16 pt-10 border-t border-[#E0D4C7]">
           <h2 className="text-2xl font-bold text-[#333333]">

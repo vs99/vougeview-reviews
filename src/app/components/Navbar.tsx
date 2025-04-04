@@ -97,11 +97,17 @@ const Navbar = () => {
     fetchCategories();
   }, []);
 
-  // Load user from localStorage.
+  // In src/app/components/Navbar.tsx
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    try {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser && storedUser !== "undefined" && storedUser !== "null") {
+        setUser(JSON.parse(storedUser));
+      }
+    } catch (error) {
+      console.error("Failed to parse user from localStorage:", error);
+      // Clean up invalid data
+      localStorage.removeItem("user");
     }
   }, []);
 

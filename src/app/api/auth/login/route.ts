@@ -1,66 +1,70 @@
-import { NextRequest, NextResponse } from 'next/server';
-import dbConnect from '@/lib/dbConnect';
-import User from '@/models/User';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import { NextRequest, NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import dbConnect from "@/lib/dbConnect";
+import User from "@/models/User";
 
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
     await dbConnect();
-    const { email, password } = await request.json();
-
-    // Validate input
+    
+    const { email, password } = await req.json();
+    
     if (!email || !password) {
       return NextResponse.json(
-        { success: false, error: 'Email and password are required' },
+        { success: false, message: "Email and password are required" },
         { status: 400 }
       );
     }
-
-    // Find user
+    
+    // Find the user by email
     const user = await User.findOne({ email });
+    
     if (!user) {
       return NextResponse.json(
-        { success: false, error: 'Invalid credentials' },
+        { success: false, message: "Invalid credentials" },
         { status: 401 }
       );
     }
-
+    
     // Verify password
     const isMatch = await bcrypt.compare(password, user.password);
+    
     if (!isMatch) {
       return NextResponse.json(
-        { success: false, error: 'Invalid credentials' },
+        { success: false, message: "Invalid credentials" },
         { status: 401 }
       );
     }
-
-    // Create token
+    
+    // Create a user object without the password
+    const userToReturn = {
+      id: user._id.toString(),
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      // Add other fields you need, but exclude the password
+    };
+    
+    // Generate JWT token if you're using token-based auth
     const token = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_SECRET || 'fallback_secret',
-      { expiresIn: '7d' }
+      { id: user._id },
+      process.env.JWT_SECRET || "your-secret-key",
+      { expiresIn: "7d" }
     );
-
-    // Set cookie
-    const response = NextResponse.json(
-      { success: true, user: { id: user._id, name: user.name, email: user.email } },
-      { status: 200 }
-    );
-
-    response.cookies.set('auth_token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 60 * 60 * 24 * 7, // 1 week
-      path: '/',
+    
+    // Return success response with user data and token
+    return NextResponse.json({
+      success: true,
+      message: "Login successful",
+      user: userToReturn,
+      token
     });
-
-    return response;
+    
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error("Login error:", error);
     return NextResponse.json(
-      { success: false, error: errorMessage },
+      { success: false, message: "Internal server error" },
       { status: 500 }
     );
   }

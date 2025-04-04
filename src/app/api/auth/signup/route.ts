@@ -1,56 +1,65 @@
-import { NextRequest, NextResponse } from 'next/server';
-import dbConnect from '@/lib/dbConnect';
-import User from '@/models/User';
-import bcrypt from 'bcryptjs';
+// src/app/api/auth/register/route.ts
+import { NextRequest, NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
+import dbConnect from "@/lib/dbConnect";
+import User from "@/models/User";
 
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
     await dbConnect();
-    const { name, email, password } = await request.json();
-
+    
+    const { firstName, lastName, email, password } = await req.json();
+    
     // Validate input
-    if (!name || !email || !password) {
+    if (!firstName || !lastName || !email || !password) {
       return NextResponse.json(
-        { success: false, error: 'Name, email, and password are required' },
+        { success: false, message: "All fields are required" },
         { status: 400 }
       );
     }
-
+    
     // Check if user already exists
     const existingUser = await User.findOne({ email });
+    
     if (existingUser) {
       return NextResponse.json(
-        { success: false, error: 'User with this email already exists' },
-        { status: 409 }
+        { success: false, message: "Email already in use" },
+        { status: 400 }
       );
     }
-
+    
     // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-
-    // Create user
-    const user = await User.create({
-      name,
+    
+    // Create new user
+    const newUser = new User({
+      firstName,
+      lastName,
       email,
       password: hashedPassword,
     });
-
-    return NextResponse.json(
-      { 
-        success: true, 
-        user: { 
-          id: user._id, 
-          name: user.name, 
-          email: user.email 
-        } 
-      },
-      { status: 201 }
-    );
+    
+    await newUser.save();
+    
+    // Create user object to return (without password)
+    const userToReturn = {
+      id: newUser._id.toString(),
+      firstName: newUser.firstName,
+      lastName: newUser.lastName,
+      email: newUser.email,
+    };
+    
+    return NextResponse.json({
+      success: true,
+      message: "Registration successful",
+      user: userToReturn,
+    });
+    
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error("Registration error:", error);
     return NextResponse.json(
-      { success: false, error: errorMessage },
+      { success: false, message: "Internal server error" },
       { status: 500 }
     );
   }

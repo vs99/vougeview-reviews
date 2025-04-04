@@ -667,14 +667,21 @@ const products = [
 ];
 
 // Seed function
+// Seed function
 async function seedProducts() {
   try {
     // Clear existing products
     await Product.deleteMany({});
     console.log("Cleared existing products.");
 
-    // Insert new products
-    const insertedProducts = await Product.insertMany(products);
+    // Override the rating for each product to be 0
+    const modifiedProducts = products.map(product => ({
+      ...product,
+      rating: 0,
+    }));
+
+    // Insert new products with initial rating set to 0
+    const insertedProducts = await Product.insertMany(modifiedProducts);
     console.log(`Inserted ${insertedProducts.length} products.`);
   } catch (error) {
     console.error("Error seeding products:", error);
@@ -685,6 +692,7 @@ async function seedProducts() {
     process.exit(0);
   }
 }
+
 
 // Run the seed function
 seedProducts();

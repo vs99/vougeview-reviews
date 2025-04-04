@@ -82,9 +82,13 @@ export default function ReviewsPage() {
       ) : (
         <p className="text-gray-500">No reviews available.</p>
       )}
-      <div className="mt-8">
-        <Link href="/" className="text-indigo-600 hover:underline">
-          Back to Home
+      {/* Bottom Return Home Button */}
+      <div className="mt-12 text-center">
+        <Link
+          href="/"
+          className="inline-flex items-center px-6 py-3 bg-[#8B6E4E] text-white font-medium rounded-md shadow hover:bg-[#654E3E] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B6E4E]"
+        >
+          Return Home
         </Link>
       </div>
     </div>

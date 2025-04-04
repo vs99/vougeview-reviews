@@ -155,7 +155,9 @@ const ReviewCard = ({
                   </span>
                 )}
               </div>
-              <p className="text-sm text-[#5A5A5A]">{reviewsCountText}</p>
+              {user.reviews > 0 && (
+                <p className="text-sm text-[#5A5A5A]">{reviewsCountText}</p>
+              )}
             </div>
             <p className="text-sm text-[#5A5A5A]">{timeAgo}</p>
           </div>
@@ -198,9 +200,6 @@ const ReviewCard = ({
                 />
               </svg>
               Helpful ({helpful})
-            </button>
-            <button className="ml-4 text-sm text-[#5A5A5A] hover:text-[#333333]">
-              Report
             </button>
           </div>
         </div>

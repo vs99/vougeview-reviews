@@ -53,6 +53,7 @@ const ProductsPage = () => {
   return (
     <div className="bg-[#F9F5F0]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Top Header */}
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold text-[#333333]">All Products</h1>
           <Link
@@ -62,6 +63,8 @@ const ProductsPage = () => {
             Return Home
           </Link>
         </div>
+
+        {/* Products Grid */}
         {loading ? (
           <div className="text-[#5A5A5A]">Loading products...</div>
         ) : (
@@ -80,6 +83,16 @@ const ProductsPage = () => {
             ))}
           </div>
         )}
+
+        {/* Bottom Return Home Button */}
+        <div className="mt-12 text-center">
+          <Link
+            href="/"
+            className="inline-flex items-center px-6 py-3 bg-[#8B6E4E] text-white font-medium rounded-md shadow hover:bg-[#654E3E] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B6E4E]"
+          >
+            Return Home
+          </Link>
+        </div>
       </div>
     </div>
   );
