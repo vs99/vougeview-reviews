@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import CategoryCard from "../components/CategoryCard";
 
 type Category = {
@@ -47,12 +46,12 @@ const CategoriesPage = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading categories...</div>;
+    return <div className="text-center">Loading categories...</div>;
   }
 
   return (
-    <div className="bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="bg-gray-50 min-h-screen">
+      <div className="max-w-7xl mx-auto px-6 py-12">
         <h1 className="text-4xl font-bold text-gray-900 mb-8">
           All Categories
         </h1>
@@ -70,7 +69,7 @@ const CategoriesPage = () => {
         <div className="mt-12 text-center">
           <Link
             href="/"
-            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+            className="inline-flex items-center px-6 py-3 bg-gray-900 text-white font-medium rounded-md shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-600"
           >
             Return Home
           </Link>

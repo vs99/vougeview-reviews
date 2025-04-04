@@ -370,9 +370,11 @@ const ProductDetailPage = () => {
                 Review Highlights
               </h3>
               <div className="mt-3 space-y-2">
-                {highlights.map((review) => (
+                {highlights.map((review, index) => (
                   <div
-                    key={String(review.id)}
+                    key={String(
+                      review.id || (review as any)._id || `highlight-${index}`
+                    )}
                     className="border border-gray-200 rounded-md p-3"
                   >
                     <div className="flex items-center">

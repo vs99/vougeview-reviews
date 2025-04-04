@@ -25,6 +25,7 @@ const ProductsPage = () => {
         const res = await fetch("/api/products");
         if (res.ok) {
           const data = await res.json();
+          // Map _id to id
           const mappedProducts: Product[] = data.products.map((p: any) => ({
             id: p._id.toString(),
             title: p.title,
@@ -52,7 +53,15 @@ const ProductsPage = () => {
   return (
     <div className="bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 className="text-4xl font-bold text-gray-900 mb-8">All Products</h1>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-900">All Products</h1>
+          <Link
+            href="/"
+            className="text-indigo-600 hover:text-indigo-800 font-medium"
+          >
+            Return Home
+          </Link>
+        </div>
         {loading ? (
           <div>Loading products...</div>
         ) : (
@@ -60,7 +69,7 @@ const ProductsPage = () => {
             {productsData.map((product) => (
               <ProductCard
                 key={product.id}
-                id={product.id}
+                id={product.id} // Pass as string
                 title={product.title}
                 category={product.category}
                 image={product.image}
@@ -71,14 +80,6 @@ const ProductsPage = () => {
             ))}
           </div>
         )}
-        <div className="mt-12 text-center">
-          <Link
-            href="/"
-            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-          >
-            Return Home
-          </Link>
-        </div>
       </div>
     </div>
   );
