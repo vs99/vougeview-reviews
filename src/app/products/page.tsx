@@ -51,19 +51,19 @@ const ProductsPage = () => {
   }, []);
 
   return (
-    <div className="bg-white">
+    <div className="bg-[#F9F5F0]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900">All Products</h1>
+          <h1 className="text-4xl font-bold text-[#333333]">All Products</h1>
           <Link
             href="/"
-            className="text-indigo-600 hover:text-indigo-800 font-medium"
+            className="text-[#8B6E4E] hover:text-[#654E3E] font-medium"
           >
             Return Home
           </Link>
         </div>
         {loading ? (
-          <div>Loading products...</div>
+          <div className="text-[#5A5A5A]">Loading products...</div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {productsData.map((product) => (

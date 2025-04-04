@@ -70,7 +70,7 @@ const ProductCard = ({
         stars.push(
           <svg
             key={`star-empty-${i}`}
-            className="h-5 w-5 text-gray-300"
+            className="h-5 w-5 text-[#E0D4C7]"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
             fill="currentColor"
@@ -87,7 +87,7 @@ const ProductCard = ({
   return (
     <Link href={`/products/${id}`}>
       <div
-        className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300"
+        className="bg-[#F9F5F0] rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -101,26 +101,26 @@ const ProductCard = ({
             } transition-transform duration-300`}
           />
           <div className="absolute top-2 left-2">
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#E0D4C7] text-[#8B6E4E]">
               {category}
             </span>
           </div>
         </div>
         <div className="p-4">
-          <h3 className="text-lg font-medium text-gray-900 truncate">
+          <h3 className="text-lg font-medium text-[#333333] truncate">
             {title}
           </h3>
           <div className="flex items-center mt-1">
             <div className="flex items-center">{renderStars(rating)}</div>
-            <p className="ml-2 text-sm text-gray-500">
+            <p className="ml-2 text-sm text-[#5A5A5A]">
               ({reviewCount} reviews)
             </p>
           </div>
-          <p className="mt-2 text-sm text-gray-500 line-clamp-2">
+          <p className="mt-2 text-sm text-[#5A5A5A] line-clamp-2">
             {description}
           </p>
           <div className="mt-3">
-            <span className="inline-flex items-center justify-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+            <span className="inline-flex items-center justify-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-white bg-[#8B6E4E] hover:bg-[#654E3E]">
               Read Review
             </span>
           </div>

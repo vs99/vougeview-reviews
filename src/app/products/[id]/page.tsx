@@ -180,15 +180,15 @@ const ProductDetailPage = () => {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="animate-pulse flex flex-col space-y-4">
-          <div className="h-8 bg-gray-200 rounded w-1/4"></div>
+          <div className="h-8 bg-[#F3ECE1] rounded w-1/4"></div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="h-96 bg-gray-200 rounded"></div>
+            <div className="h-96 bg-[#F3ECE1] rounded"></div>
             <div className="space-y-4">
-              <div className="h-8 bg-gray-200 rounded w-3/4"></div>
-              <div className="h-4 bg-gray-200 rounded w-1/4"></div>
-              <div className="h-4 bg-gray-200 rounded"></div>
-              <div className="h-4 bg-gray-200 rounded"></div>
-              <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+              <div className="h-8 bg-[#F3ECE1] rounded w-3/4"></div>
+              <div className="h-4 bg-[#F3ECE1] rounded w-1/4"></div>
+              <div className="h-4 bg-[#F3ECE1] rounded"></div>
+              <div className="h-4 bg-[#F3ECE1] rounded"></div>
+              <div className="h-4 bg-[#F3ECE1] rounded w-5/6"></div>
             </div>
           </div>
         </div>
@@ -199,13 +199,13 @@ const ProductDetailPage = () => {
   if (!product) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
-        <h2 className="text-3xl font-bold text-gray-900">Product not found</h2>
-        <p className="mt-4 text-gray-500">
+        <h2 className="text-3xl font-bold text-[#333333]">Product not found</h2>
+        <p className="mt-4 text-[#5A5A5A]">
           The product you are looking for does not exist or has been removed.
         </p>
         <Link
           href="/"
-          className="mt-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className="mt-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-[#8B6E4E] hover:bg-[#654E3E] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B6E4E]"
         >
           Return to Home
         </Link>
@@ -214,28 +214,28 @@ const ProductDetailPage = () => {
   }
 
   return (
-    <div className="bg-white">
+    <div className="bg-[#F9F5F0]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Breadcrumbs */}
         <nav className="flex mb-8" aria-label="Breadcrumb">
           <ol className="flex items-center space-x-2">
             <li>
-              <Link href="/" className="text-gray-500 hover:text-gray-700">
+              <Link href="/" className="text-[#5A5A5A] hover:text-[#8B6E4E]">
                 Home
               </Link>
             </li>
             <li>
-              <span className="text-gray-300 mx-2">/</span>
+              <span className="text-[#E0D4C7] mx-2">/</span>
               <Link
                 href={`/categories/${product.category.toLowerCase()}`}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-[#5A5A5A] hover:text-[#8B6E4E]"
               >
                 {product.category}
               </Link>
             </li>
             <li>
-              <span className="text-gray-300 mx-2">/</span>
-              <span className="text-gray-900">{product.title}</span>
+              <span className="text-[#E0D4C7] mx-2">/</span>
+              <span className="text-[#333333]">{product.title}</span>
             </li>
           </ol>
         </nav>
@@ -254,24 +254,26 @@ const ProductDetailPage = () => {
           </div>
           {/* Product Details */}
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold text-[#333333]">
               {product.title}
             </h1>
             <div className="mt-2 flex items-center">
               <RatingStars rating={averageRating} />
-              <div className="ml-2 text-gray-500">
+              <div className="ml-2 text-[#5A5A5A]">
                 {averageRating.toFixed(1)} ({totalReviews} reviews)
               </div>
             </div>
             <div className="mt-6">
-              <h3 className="text-lg font-medium text-gray-900">Description</h3>
-              <p className="mt-2 text-gray-600">{product.description}</p>
+              <h3 className="text-lg font-medium text-[#333333]">
+                Description
+              </h3>
+              <p className="mt-2 text-[#5A5A5A]">{product.description}</p>
             </div>
 
             {/* Variants (if any) */}
             {product.variants && product.variants.length > 0 && (
               <div className="mt-6">
-                <h3 className="text-lg font-medium text-gray-900">Options</h3>
+                <h3 className="text-lg font-medium text-[#333333]">Options</h3>
                 <div className="mt-2 grid grid-cols-3 gap-4">
                   {product.variants.map((variant: any, index: number) => (
                     <button
@@ -279,8 +281,8 @@ const ProductDetailPage = () => {
                       onClick={() => setSelectedVariant(variant)}
                       className={`border rounded-md py-2 px-3 text-sm font-medium ${
                         selectedVariant?.id === variant.id
-                          ? "border-indigo-500 text-indigo-600"
-                          : "border-gray-300 text-gray-900 hover:bg-gray-50"
+                          ? "border-[#8B6E4E] text-[#8B6E4E]"
+                          : "border-[#E0D4C7] text-[#333333] hover:bg-[#F3ECE1]"
                       }`}
                     >
                       {variant.size || variant.finish || variant.model}
@@ -294,7 +296,7 @@ const ProductDetailPage = () => {
             <div className="mt-8">
               <button
                 onClick={scrollToReviewForm}
-                className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
+                className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#8B6E4E] hover:bg-[#654E3E] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B6E4E]"
               >
                 Write a Review
               </button>
@@ -304,29 +306,31 @@ const ProductDetailPage = () => {
 
         {/* Long Description */}
         <div className="mt-16">
-          <h2 className="text-2xl font-bold text-gray-900">
+          <h2 className="text-2xl font-bold text-[#333333]">
             Product Description
           </h2>
-          <div className="mt-6 prose prose-indigo prose-lg text-gray-600 mx-auto">
+          <div className="mt-6 prose prose-lg text-[#5A5A5A] mx-auto">
             <p>{product.longDescription}</p>
           </div>
         </div>
 
         {/* Reviews Section */}
-        <div className="mt-16 pt-10 border-t border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-900">Customer Reviews</h2>
+        <div className="mt-16 pt-10 border-t border-[#E0D4C7]">
+          <h2 className="text-2xl font-bold text-[#333333]">
+            Customer Reviews
+          </h2>
 
           {/* Top Section: Average Rating */}
           <div className="mt-8 flex items-center justify-between">
             <div className="flex items-center">
               <RatingStars rating={averageRating} size="lg" />
-              <p className="ml-3 text-lg font-medium text-gray-900">
+              <p className="ml-3 text-lg font-medium text-[#333333]">
                 {averageRating.toFixed(1)} out of 5 stars
               </p>
             </div>
             <button
               onClick={scrollToReviewForm}
-              className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
+              className="px-4 py-2 bg-[#8B6E4E] text-white rounded-md hover:bg-[#654E3E] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B6E4E]"
             >
               Write a Review
             </button>
@@ -336,7 +340,7 @@ const ProductDetailPage = () => {
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Rating Breakdown */}
             <div>
-              <h3 className="text-lg font-medium text-gray-900">
+              <h3 className="text-lg font-medium text-[#333333]">
                 Rating Breakdown
               </h3>
               <div className="mt-3 space-y-2">
@@ -346,16 +350,16 @@ const ProductDetailPage = () => {
                     totalReviews > 0 ? (count / totalReviews) * 100 : 0;
                   return (
                     <div key={star} className="flex items-center">
-                      <span className="w-10 text-sm font-medium text-gray-600">
+                      <span className="w-10 text-sm font-medium text-[#5A5A5A]">
                         {star} star
                       </span>
-                      <div className="flex-1 mx-2 h-3 bg-gray-200 rounded">
+                      <div className="flex-1 mx-2 h-3 bg-[#E0D4C7] rounded">
                         <div
                           className="h-3 bg-yellow-400 rounded"
                           style={{ width: `${percentage}%` }}
                         />
                       </div>
-                      <span className="w-10 text-sm text-gray-600 text-right">
+                      <span className="w-10 text-sm text-[#5A5A5A] text-right">
                         {count}
                       </span>
                     </div>
@@ -366,7 +370,7 @@ const ProductDetailPage = () => {
 
             {/* Review Highlights */}
             <div>
-              <h3 className="text-lg font-medium text-gray-900">
+              <h3 className="text-lg font-medium text-[#333333]">
                 Review Highlights
               </h3>
               <div className="mt-3 space-y-2">
@@ -375,15 +379,15 @@ const ProductDetailPage = () => {
                     key={String(
                       review.id || (review as any)._id || `highlight-${index}`
                     )}
-                    className="border border-gray-200 rounded-md p-3"
+                    className="border border-[#E0D4C7] rounded-md p-3"
                   >
                     <div className="flex items-center">
                       <RatingStars rating={review.rating} size="sm" />
-                      <span className="ml-2 text-sm font-medium text-gray-700">
+                      <span className="ml-2 text-sm font-medium text-[#333333]">
                         {review.title}
                       </span>
                     </div>
-                    <p className="mt-1 text-xs text-gray-500">
+                    <p className="mt-1 text-xs text-[#5A5A5A]">
                       Reviewed on {new Date(review.date).toLocaleDateString()}
                     </p>
                   </div>
@@ -407,7 +411,7 @@ const ProductDetailPage = () => {
 
           {/* Recent Reviews */}
           <div className="mt-8">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">
+            <h3 className="text-xl font-bold text-[#333333] mb-4">
               Recent Reviews
             </h3>
             {totalReviews > 0 ? (
@@ -439,7 +443,7 @@ const ProductDetailPage = () => {
               </div>
             ) : (
               <div className="text-center py-12">
-                <p className="text-gray-500">
+                <p className="text-[#5A5A5A]">
                   No reviews yet for this product.
                 </p>
               </div>

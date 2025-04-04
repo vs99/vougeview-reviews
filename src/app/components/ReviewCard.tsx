@@ -99,7 +99,7 @@ const ReviewCard = ({
         stars.push(
           <svg
             key={`star-empty-${i}`}
-            className="h-5 w-5 text-gray-300"
+            className="h-5 w-5 text-[#E0D4C7]"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
             fill="currentColor"
@@ -134,11 +134,11 @@ const ReviewCard = ({
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md mb-4">
+    <div className="bg-[#F9F5F0] p-6 rounded-lg shadow-md mb-4">
       <div className="flex items-start">
         {/* Avatar using user initials */}
         <div className="relative h-10 w-10 mr-4">
-          <div className="h-full w-full rounded-full bg-indigo-600 flex items-center justify-center">
+          <div className="h-full w-full rounded-full bg-[#8B6E4E] flex items-center justify-center">
             <span className="text-white font-bold text-sm">
               {getInitials(user.name)}
             </span>
@@ -148,32 +148,32 @@ const ReviewCard = ({
           <div className="flex justify-between items-start">
             <div>
               <div className="flex items-center">
-                <h4 className="font-medium text-gray-900">{user.name}</h4>
+                <h4 className="font-medium text-[#333333]">{user.name}</h4>
                 {verified && (
-                  <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                  <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#E0D4C7] text-[#8B6E4E]">
                     Verified Purchase
                   </span>
                 )}
               </div>
-              <p className="text-sm text-gray-500">{reviewsCountText}</p>
+              <p className="text-sm text-[#5A5A5A]">{reviewsCountText}</p>
             </div>
-            <p className="text-sm text-gray-500">{timeAgo}</p>
+            <p className="text-sm text-[#5A5A5A]">{timeAgo}</p>
           </div>
           <div className="mt-2">
             <div className="flex items-center">
               <div className="flex">{renderStars(rating)}</div>
-              <h3 className="ml-2 text-lg font-medium text-gray-900">
+              <h3 className="ml-2 text-lg font-medium text-[#333333]">
                 {title}
               </h3>
             </div>
-            <p className="mt-2 text-gray-700">{content}</p>
+            <p className="mt-2 text-[#5A5A5A]">{content}</p>
           </div>
           <div className="mt-4 text-sm">
-            <p className="text-gray-500">
+            <p className="text-[#5A5A5A]">
               Review for{" "}
               <a
                 href={`/products/${productId}`}
-                className="text-indigo-600 hover:text-indigo-800"
+                className="text-[#8B6E4E] hover:text-[#654E3E]"
               >
                 {productName}
               </a>
@@ -182,7 +182,7 @@ const ReviewCard = ({
           <div className="mt-4 flex items-center">
             <button
               onClick={handleHelpfulClick}
-              className="inline-flex items-center px-3 py-1 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="inline-flex items-center px-3 py-1 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-[#F3ECE1] bg-[#8B6E4E] hover:bg-[#654E3E] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B6E4E]"
             >
               <svg
                 className="mr-1 h-4 w-4"
@@ -199,7 +199,7 @@ const ReviewCard = ({
               </svg>
               Helpful ({helpful})
             </button>
-            <button className="ml-4 text-sm text-gray-500 hover:text-gray-700">
+            <button className="ml-4 text-sm text-[#5A5A5A] hover:text-[#333333]">
               Report
             </button>
           </div>

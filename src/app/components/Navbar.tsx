@@ -148,12 +148,12 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="border-b bg-background sticky top-0 z-40">
+    <nav className="border-b bg-[#F9F5F0] sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           {/* Left Section (Logo + Navigation) */}
           <div className="flex items-center">
-            <Link href="/" className="text-2xl font-bold text-indigo-600 mr-8">
+            <Link href="/" className="text-2xl font-bold text-[#8B6E4E] mr-8">
               VougeView
             </Link>
 
@@ -163,7 +163,7 @@ const Navbar = () => {
                   <NavigationMenuItem>
                     <Link href="/" legacyBehavior passHref>
                       <NavigationMenuLink
-                        className={navigationMenuTriggerStyle()}
+                        className={`${navigationMenuTriggerStyle()} text-[#333333] hover:text-[#8B6E4E]`}
                       >
                         Home
                       </NavigationMenuLink>
@@ -171,10 +171,12 @@ const Navbar = () => {
                   </NavigationMenuItem>
 
                   <NavigationMenuItem>
-                    <NavigationMenuTrigger>Categories</NavigationMenuTrigger>
-                    <NavigationMenuContent className="bg-white shadow-md rounded-lg p-4">
+                    <NavigationMenuTrigger className="text-[#333333] hover:text-[#8B6E4E]">
+                      Categories
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent className="bg-[#F9F5F0] shadow-md rounded-lg p-4">
                       <div className="w-[400px]">
-                        <div className="mb-3 text-lg font-semibold text-gray-900">
+                        <div className="mb-3 text-lg font-semibold text-[#333333]">
                           Browse Categories
                         </div>
                         <Separator className="mb-4" />
@@ -183,15 +185,15 @@ const Navbar = () => {
                             <Link
                               key={category.id}
                               href={category.href || "#"}
-                              className="group block rounded-md p-3 transition-all duration-200 hover:bg-gray-100 aspect-[2/1] flex flex-col justify-center"
+                              className="group block rounded-md p-3 transition-all duration-200 hover:bg-[#EFE8E2] aspect-[2/1] flex flex-col justify-center"
                             >
-                              <div className="font-medium text-gray-800 group-hover:text-indigo-600 text-center">
+                              <div className="font-medium text-[#333333] group-hover:text-[#8B6E4E] text-center">
                                 {category.name}
                               </div>
-                              <div className="text-xs text-gray-600 text-center">
+                              <div className="text-xs text-[#5A5A5A] text-center">
                                 {category.description}
                               </div>
-                              <div className="text-xs text-gray-500 text-center">
+                              <div className="text-xs text-[#654E3E] text-center">
                                 {category.productCount} products
                               </div>
                             </Link>
@@ -202,7 +204,7 @@ const Navbar = () => {
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="text-xs font-medium text-indigo-600 hover:underline"
+                              className="text-xs font-medium text-[#8B6E4E] hover:underline"
                             >
                               View All Categories →
                             </Button>
@@ -215,7 +217,7 @@ const Navbar = () => {
                   <NavigationMenuItem>
                     <Link href="/reviews" legacyBehavior passHref>
                       <NavigationMenuLink
-                        className={navigationMenuTriggerStyle()}
+                        className={`${navigationMenuTriggerStyle()} text-[#333333] hover:text-[#8B6E4E]`}
                       >
                         Latest Reviews
                       </NavigationMenuLink>
@@ -242,7 +244,7 @@ const Navbar = () => {
               />
               <button
                 onClick={handleSearch}
-                className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700"
+                className="absolute inset-y-0 right-0 flex items-center pr-3 text-[#5A5A5A] hover:text-[#333333]"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -270,7 +272,7 @@ const Navbar = () => {
                     >
                       <Button
                         variant="ghost"
-                        className="relative flex h-10 w-10 items-center justify-center rounded-full bg-indigo-600 p-0 text-white hover:bg-indigo-700"
+                        className="relative flex h-10 w-10 items-center justify-center rounded-full bg-[#8B6E4E] p-0 text-white hover:bg-[#654E3E]"
                         title="Open profile"
                       >
                         <span className="font-bold text-sm text-white">
@@ -281,22 +283,22 @@ const Navbar = () => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
                     align="end"
-                    className="w-64 p-4 shadow-md"
+                    className="w-64 p-4 shadow-md bg-[#F9F5F0]"
                     ref={contentRef}
                   >
                     <div className="flex items-center space-x-3 mb-3">
                       <div className="relative">
                         <Avatar className="h-12 w-12">
-                          <AvatarFallback className="bg-indigo-600 text-white font-bold">
+                          <AvatarFallback className="bg-[#8B6E4E] text-white font-bold">
                             {getInitials()}
                           </AvatarFallback>
                         </Avatar>
                       </div>
                       <div>
-                        <div className="font-semibold text-sm">
+                        <div className="font-semibold text-sm text-[#333333]">
                           {user.firstName} {user.lastName}
                         </div>
-                        <div className="text-xs text-muted-foreground">
+                        <div className="text-xs text-[#5A5A5A]">
                           {user.email}
                         </div>
                       </div>
@@ -334,7 +336,7 @@ const Navbar = () => {
               variant="ghost"
               size="icon"
               onClick={() => setIsOpen(!isOpen)}
-              className="h-10 w-10"
+              className="h-10 w-10 text-[#8B6E4E]"
             >
               <span className="sr-only">Open main menu</span>
               {isOpen ? (

@@ -3,18 +3,18 @@ import Link from "next/link";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-white">
+    <footer className="bg-[#654E3E] text-[#F3ECE1]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-1">
-            <Link href="/" className="text-2xl font-bold text-white">
+            <Link href="/" className="text-2xl font-bold text-[#F3ECE1]">
               VougeView
             </Link>
-            <p className="mt-2 text-sm text-gray-300">
+            <p className="mt-2 text-sm text-[#E0D4C7]">
               Your trusted source for honest product reviews and ratings.
             </p>
             <div className="mt-4 flex space-x-6">
-              <a href="#" className="text-gray-400 hover:text-white">
+              <a href="#" className="text-[#E0D4C7] hover:text-[#F3ECE1]">
                 <span className="sr-only">Facebook</span>
                 <svg
                   className="h-6 w-6"
@@ -29,7 +29,7 @@ const Footer = () => {
                   />
                 </svg>
               </a>
-              <a href="#" className="text-gray-400 hover:text-white">
+              <a href="#" className="text-[#E0D4C7] hover:text-[#F3ECE1]">
                 <span className="sr-only">Instagram</span>
                 <svg
                   className="h-6 w-6"
@@ -44,7 +44,7 @@ const Footer = () => {
                   />
                 </svg>
               </a>
-              <a href="#" className="text-gray-400 hover:text-white">
+              <a href="#" className="text-[#E0D4C7] hover:text-[#F3ECE1]">
                 <span className="sr-only">Twitter</span>
                 <svg
                   className="h-6 w-6"
@@ -58,14 +58,14 @@ const Footer = () => {
             </div>
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
+            <h3 className="text-sm font-semibold text-[#E0D4C7] uppercase tracking-wider">
               Categories
             </h3>
             <ul className="mt-4 space-y-4">
               <li>
                 <Link
                   href="/categories/beauty"
-                  className="text-base text-gray-300 hover:text-white"
+                  className="text-base text-[#F3ECE1] hover:text-[#F9F5F0]"
                 >
                   Beauty
                 </Link>
@@ -73,7 +73,7 @@ const Footer = () => {
               <li>
                 <Link
                   href="/categories/cars"
-                  className="text-base text-gray-300 hover:text-white"
+                  className="text-base text-[#F3ECE1] hover:text-[#F9F5F0]"
                 >
                   Cars
                 </Link>
@@ -81,7 +81,7 @@ const Footer = () => {
               <li>
                 <Link
                   href="/categories/electronics"
-                  className="text-base text-gray-300 hover:text-white"
+                  className="text-base text-[#F3ECE1] hover:text-[#F9F5F0]"
                 >
                   Electronics
                 </Link>
@@ -89,7 +89,7 @@ const Footer = () => {
               <li>
                 <Link
                   href="/categories/home-garden"
-                  className="text-base text-gray-300 hover:text-white"
+                  className="text-base text-[#F3ECE1] hover:text-[#F9F5F0]"
                 >
                   Home & Garden
                 </Link>
@@ -97,7 +97,7 @@ const Footer = () => {
               <li>
                 <Link
                   href="/categories/fashion"
-                  className="text-base text-gray-300 hover:text-white"
+                  className="text-base text-[#F3ECE1] hover:text-[#F9F5F0]"
                 >
                   Fashion
                 </Link>
@@ -105,14 +105,14 @@ const Footer = () => {
             </ul>
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
+            <h3 className="text-sm font-semibold text-[#E0D4C7] uppercase tracking-wider">
               Company
             </h3>
             <ul className="mt-4 space-y-4">
               <li>
                 <Link
                   href="/about"
-                  className="text-base text-gray-300 hover:text-white"
+                  className="text-base text-[#F3ECE1] hover:text-[#F9F5F0]"
                 >
                   About
                 </Link>
@@ -120,7 +120,7 @@ const Footer = () => {
               <li>
                 <Link
                   href="/blog"
-                  className="text-base text-gray-300 hover:text-white"
+                  className="text-base text-[#F3ECE1] hover:text-[#F9F5F0]"
                 >
                   Blog
                 </Link>
@@ -128,7 +128,7 @@ const Footer = () => {
               <li>
                 <Link
                   href="/careers"
-                  className="text-base text-gray-300 hover:text-white"
+                  className="text-base text-[#F3ECE1] hover:text-[#F9F5F0]"
                 >
                   Careers
                 </Link>
@@ -136,7 +136,7 @@ const Footer = () => {
               <li>
                 <Link
                   href="/contact"
-                  className="text-base text-gray-300 hover:text-white"
+                  className="text-base text-[#F3ECE1] hover:text-[#F9F5F0]"
                 >
                   Contact
                 </Link>
@@ -144,10 +144,10 @@ const Footer = () => {
             </ul>
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
+            <h3 className="text-sm font-semibold text-[#E0D4C7] uppercase tracking-wider">
               Subscribe to our newsletter
             </h3>
-            <p className="mt-4 text-base text-gray-300">
+            <p className="mt-4 text-base text-[#F3ECE1]">
               Get the latest reviews and product insights.
             </p>
             <form className="mt-4 sm:flex sm:max-w-md">
@@ -160,13 +160,13 @@ const Footer = () => {
                 id="email-address"
                 autoComplete="email"
                 required
-                className="appearance-none min-w-0 w-full bg-white border border-transparent rounded-md py-2 px-4 text-base text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white focus:border-white focus:placeholder-gray-400"
+                className="appearance-none min-w-0 w-full bg-white border border-transparent rounded-md py-2 px-4 text-base text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#654E3E] focus:ring-[#8B6E4E] focus:border-[#8B6E4E] focus:placeholder-gray-400"
                 placeholder="Enter your email"
               />
               <div className="mt-3 rounded-md sm:mt-0 sm:ml-3 sm:flex-shrink-0">
                 <button
                   type="submit"
-                  className="w-full bg-indigo-600 border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500"
+                  className="w-full bg-[#8B6E4E] border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-base font-medium text-[#F3ECE1] hover:bg-[#7A563C] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#654E3E] focus:ring-[#8B6E4E]"
                 >
                   Subscribe
                 </button>
@@ -174,8 +174,8 @@ const Footer = () => {
             </form>
           </div>
         </div>
-        <div className="mt-12 border-t border-gray-700 pt-8">
-          <p className="text-base text-gray-400 xl:text-center">
+        <div className="mt-12 border-t border-[#8B6E4E] pt-8">
+          <p className="text-base text-[#E0D4C7] xl:text-center">
             &copy; {new Date().getFullYear()} VougeView Reviews. All rights
             reserved.
           </p>

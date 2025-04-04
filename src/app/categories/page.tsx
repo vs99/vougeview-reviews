@@ -46,13 +46,15 @@ const CategoriesPage = () => {
   }, []);
 
   if (loading) {
-    return <div className="text-center">Loading categories...</div>;
+    return (
+      <div className="text-center text-[#5A5A5A]">Loading categories...</div>
+    );
   }
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-[#F9F5F0] min-h-screen">
       <div className="max-w-7xl mx-auto px-6 py-12">
-        <h1 className="text-4xl font-bold text-gray-900 mb-8">
+        <h1 className="text-4xl font-bold text-[#333333] mb-8">
           All Categories
         </h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -69,7 +71,7 @@ const CategoriesPage = () => {
         <div className="mt-12 text-center">
           <Link
             href="/"
-            className="inline-flex items-center px-6 py-3 bg-gray-900 text-white font-medium rounded-md shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-600"
+            className="inline-flex items-center px-6 py-3 bg-[#8B6E4E] text-white font-medium rounded-md shadow hover:bg-[#654E3E] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B6E4E]"
           >
             Return Home
           </Link>

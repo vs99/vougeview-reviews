@@ -148,28 +148,28 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="bg-gray-50">
+    <div className="bg-[#F9F5F0]">
       {/* Hero Section */}
-      <section className="relative bg-indigo-600">
+      <section className="relative bg-[#8B6E4E]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
           <div className="md:w-2/3">
             <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
               Discover Trusted Reviews & In-Depth Ratings
             </h1>
-            <p className="mt-6 text-xl text-indigo-100 max-w-3xl">
+            <p className="mt-6 text-xl text-[#F3ECE1] max-w-3xl">
               Read honest reviews, explore top-rated products, and find the best
               recommendations to guide your purchasing decisions.
             </p>
             <div className="mt-10 flex space-x-4">
               <Link
                 href="/categories"
-                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-indigo-700 bg-white hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-[#8B6E4E] bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B6E4E]"
               >
                 Browse Categories
               </Link>
               <Link
                 href="/reviews"
-                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-800 bg-opacity-60 hover:bg-opacity-70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#654E3E] hover:bg-[#5A4336] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#654E3E]"
               >
                 Latest Reviews
               </Link>
@@ -181,10 +181,10 @@ export default function Home() {
       {/* Categories Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-900">Top Categories</h2>
+          <h2 className="text-3xl font-bold text-[#333333]">Top Categories</h2>
           <Link
             href="/categories"
-            className="text-indigo-600 hover:text-indigo-800 font-medium"
+            className="text-[#8B6E4E] hover:text-[#654E3E] font-medium"
           >
             View All Categories
           </Link>
@@ -210,12 +210,12 @@ export default function Home() {
       <section className="bg-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900">
+            <h2 className="text-3xl font-bold text-[#333333]">
               Trending Products
             </h2>
             <Link
               href="/products"
-              className="text-indigo-600 hover:text-indigo-800 font-medium"
+              className="text-[#8B6E4E] hover:text-[#654E3E] font-medium"
             >
               View All Products
             </Link>
@@ -242,6 +242,7 @@ export default function Home() {
       </section>
 
       {/* Latest Reviews Section */}
+      {/* Latest Reviews Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900">Latest Reviews</h2>
@@ -257,56 +258,28 @@ export default function Home() {
         ) : (
           <div className="space-y-4">
             {reviews.length > 0 ? (
-              reviews.map((review) => (
-                <ReviewCard
-                  key={String(review.id || (review as any)._id)}
-                  id={String(review.id || (review as any)._id)}
-                  user={review.user}
-                  rating={review.rating}
-                  title={review.title}
-                  content={review.content}
-                  date={review.date}
-                  helpfulCount={review.helpfulCount}
-                  productId={review.productId}
-                  productName={review.productName}
-                  verified={review.verified}
-                />
-              ))
+              reviews
+                .slice(0, 3)
+                .map((review) => (
+                  <ReviewCard
+                    key={String(review.id || (review as any)._id)}
+                    id={String(review.id || (review as any)._id)}
+                    user={review.user}
+                    rating={review.rating}
+                    title={review.title}
+                    content={review.content}
+                    date={review.date}
+                    helpfulCount={review.helpfulCount}
+                    productId={review.productId}
+                    productName={review.productName}
+                    verified={review.verified}
+                  />
+                ))
             ) : (
               <p className="text-gray-500">No reviews available.</p>
             )}
           </div>
         )}
-      </section>
-
-      {/* Call-to-Action Section */}
-      <section className="bg-indigo-700">
-        <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between">
-          <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-            <span className="block">Ready to share your review?</span>
-            <span className="block text-indigo-200">
-              Join our community of reviewers and help others decide.
-            </span>
-          </h2>
-          <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
-            <div className="inline-flex rounded-md shadow">
-              <Link
-                href="/auth/signup"
-                className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                Get Started
-              </Link>
-            </div>
-            <div className="ml-3 inline-flex rounded-md shadow">
-              <Link
-                href="/about"
-                className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                Learn More
-              </Link>
-            </div>
-          </div>
-        </div>
       </section>
     </div>
   );
