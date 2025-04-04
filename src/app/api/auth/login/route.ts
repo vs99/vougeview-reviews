@@ -1,57 +1,66 @@
-// app/api/auth/login/route.ts
-import { NextResponse } from 'next/server';
-import bcrypt from "bcryptjs";
-import dbConnect from "@/lib/dbConnect";
-import User from "@/models/User";
+import { NextRequest, NextResponse } from 'next/server';
+import dbConnect from '@/lib/dbConnect';
+import User from '@/models/User';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     await dbConnect();
-    
-    // Parse request body
-    const body = await request.json();
-    const { email, password } = body;
-    
-    // Basic validation
+    const { email, password } = await request.json();
+
+    // Validate input
     if (!email || !password) {
       return NextResponse.json(
-        { success: false, error: "Missing email or password" },
+        { success: false, error: 'Email and password are required' },
         { status: 400 }
       );
     }
-    
-    // Find user by email
+
+    // Find user
     const user = await User.findOne({ email });
     if (!user) {
       return NextResponse.json(
-        { success: false, error: "Invalid credentials" },
-        { status: 400 }
+        { success: false, error: 'Invalid credentials' },
+        { status: 401 }
       );
     }
-    
-    // Compare the provided password with the stored hash
+
+    // Verify password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return NextResponse.json(
-        { success: false, error: "Invalid credentials" },
-        { status: 400 }
+        { success: false, error: 'Invalid credentials' },
+        { status: 401 }
       );
     }
-    
-    // You can implement JWT tokens or sessions here if needed.
-    // For this example we simply return the user data.
-    return NextResponse.json({ 
-      success: true, 
-      data: {
-        id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email
-      }
-    }, { status: 200 });
-  } catch (error: any) {
+
+    // Create token
+    const token = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_SECRET || 'fallback_secret',
+      { expiresIn: '7d' }
+    );
+
+    // Set cookie
+    const response = NextResponse.json(
+      { success: true, user: { id: user._id, name: user.name, email: user.email } },
+      { status: 200 }
+    );
+
+    response.cookies.set('auth_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 60 * 60 * 24 * 7, // 1 week
+      path: '/',
+    });
+
+    return response;
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
-      { success: false, error: error.message },
+      { success: false, error: errorMessage },
       { status: 500 }
     );
   }

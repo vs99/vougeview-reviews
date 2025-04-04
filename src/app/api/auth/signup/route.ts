@@ -1,50 +1,56 @@
-// src/app/api/auth/signup/route.ts
-import { NextResponse } from 'next/server';
-import bcrypt from "bcryptjs";
-import dbConnect from "@/lib/dbConnect";
-import User from "@/models/User";
+import { NextRequest, NextResponse } from 'next/server';
+import dbConnect from '@/lib/dbConnect';
+import User from '@/models/User';
+import bcrypt from 'bcryptjs';
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     await dbConnect();
-    
-    // Parse request body
-    const body = await request.json();
-    const { firstName, lastName, email, password } = body;
-    
-    // Basic validation
-    if (!firstName || !lastName || !email || !password) {
+    const { name, email, password } = await request.json();
+
+    // Validate input
+    if (!name || !email || !password) {
       return NextResponse.json(
-        { success: false, error: "Missing required fields" },
+        { success: false, error: 'Name, email, and password are required' },
         { status: 400 }
       );
     }
-    
-    // Check if the user already exists
+
+    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return NextResponse.json(
-        { success: false, error: "User already exists" },
-        { status: 400 }
+        { success: false, error: 'User with this email already exists' },
+        { status: 409 }
       );
     }
-    
-    // Hash the password
+
+    // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    
-    // Create the user
+
+    // Create user
     const user = await User.create({
-      firstName,
-      lastName,
+      name,
       email,
       password: hashedPassword,
     });
-    
-    return NextResponse.json({ success: true, data: user }, { status: 201 });
-  } catch (error: any) {
+
     return NextResponse.json(
-      { success: false, error: error.message },
+      { 
+        success: true, 
+        user: { 
+          id: user._id, 
+          name: user.name, 
+          email: user.email 
+        } 
+      },
+      { status: 201 }
+    );
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json(
+      { success: false, error: errorMessage },
       { status: 500 }
     );
   }

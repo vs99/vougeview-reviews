@@ -1,53 +1,52 @@
-// src/app/api/reviews/route.ts
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import Review from '@/models/Review';
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
     await dbConnect();
-    
     // Get the product ID from URL query params
     const { searchParams } = new URL(request.url);
     const productId = searchParams.get('productId');
     
-    let query = {};
-    if (productId) {
-      query = { productId };
-    }
+    // If productId is provided, filter reviews by product
+    const query = productId ? { productId } : {};
+    const reviews = await Review.find(query).sort({ date: -1 });
     
-    const reviews = await Review.find(query)
-      .sort({ createdAt: -1 })
-      .limit(productId ? 100 : 10);
-    
-    return NextResponse.json({ 
-      success: true, 
-      reviews 
-    });
-  } catch (error: any) {
-    console.error('Error fetching reviews:', error);
+    return NextResponse.json({ success: true, reviews });
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
-      { success: false, error: error.message },
+      { success: false, error: errorMessage },
       { status: 500 }
     );
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     await dbConnect();
+    const data = await request.json();
     
-    const body = await request.json();
-    const review = await Review.create(body);
+    // Add current date if not provided
+    if (!data.date) {
+      data.date = new Date().toISOString();
+    }
     
+    // Set initial helpful count to 0 if not provided
+    if (!data.helpfulCount) {
+      data.helpfulCount = 0;
+    }
+    
+    const review = await Review.create(data);
     return NextResponse.json(
       { success: true, review },
       { status: 201 }
     );
-  } catch (error: any) {
-    console.error('Error creating review:', error);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
-      { success: false, error: error.message },
+      { success: false, error: errorMessage },
       { status: 500 }
     );
   }
