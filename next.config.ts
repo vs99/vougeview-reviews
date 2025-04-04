@@ -1,19 +1,27 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   images: {
-    domains: ["images.unsplash.com", "randomuser.me","via.placeholder.com"],
+    domains: [
+      'images.unsplash.com', 
+      'via.placeholder.com',
+      'picsum.photos',
+      'loremflickr.com',
+      'source.unsplash.com'
+    ],
+    // For older Next.js versions, use remotePatterns instead
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
   eslint: {
-    // Disable ESLint during production builds
     ignoreDuringBuilds: true,
   },
   typescript: {
-    // ⚠️ Dangerously allow production builds to successfully complete even if
-    // your project has type errors.
     ignoreBuildErrors: true,
-  },
-};
+  }
+}
 
-export default nextConfig;
+module.exports = nextConfig

@@ -30,7 +30,7 @@ const Category = mongoose.models.Category || mongoose.model('Category', Category
 const categories = [
   {
     name: "Beauty",
-    image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    image: "/images/categories/beauty.jpg",
     productCount: 10,
     description: "Discover top-rated beauty products to enhance your natural glow."
   },
@@ -72,7 +72,7 @@ const categories = [
   },
   {
     name: "Toys",
-    image: "https://images.unsplash.com/photo-1580281657521-7a3e0fae22a1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    image: "/images/categories/toys.jpg",
     productCount: 10,
     description: "Fun and educational toys for children of all ages."
   },
@@ -84,7 +84,7 @@ const categories = [
   },
   {
     name: "Health",
-    image: "https://images.unsplash.com/photo-1581091215367-0f9ea7d48d42?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    image: "/images/categories/health.jpg",
     productCount: 10,
     description: "Health and wellness products to keep you feeling your best."
   }
