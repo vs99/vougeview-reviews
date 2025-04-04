@@ -60,7 +60,7 @@ const CategoriesPage = () => {
             return;
           }
           const dataProducts = await resProducts.json();
-          let filteredProducts: Product[] = dataProducts.products.filter(
+          const filteredProducts: Product[] = dataProducts.products.filter(
             (p: any) =>
               p.category.toLowerCase() === foundCategory.name.toLowerCase()
           );
