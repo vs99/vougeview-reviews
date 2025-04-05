@@ -20,7 +20,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -29,7 +28,6 @@ const Navbar = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(false);
-
   const [user, setUser] = useState<{
     firstName: string;
     lastName: string;
@@ -97,18 +95,30 @@ const Navbar = () => {
     fetchCategories();
   }, []);
 
-  // In src/app/components/Navbar.tsx
+  // Listen for the custom "userUpdated" event to update user state
   useEffect(() => {
-    try {
-      const storedUser = localStorage.getItem("user");
-      if (storedUser && storedUser !== "undefined" && storedUser !== "null") {
-        setUser(JSON.parse(storedUser));
+    const handleUserUpdate = () => {
+      try {
+        const storedUser = localStorage.getItem("user");
+        if (storedUser && storedUser !== "undefined" && storedUser !== "null") {
+          setUser(JSON.parse(storedUser));
+        } else {
+          setUser(null);
+        }
+      } catch (error) {
+        console.error("Failed to parse user from localStorage:", error);
+        localStorage.removeItem("user");
+        setUser(null);
       }
-    } catch (error) {
-      console.error("Failed to parse user from localStorage:", error);
-      // Clean up invalid data
-      localStorage.removeItem("user");
-    }
+    };
+
+    // Listen for the event
+    window.addEventListener("userUpdated", handleUserUpdate);
+
+    // Optionally, check for the user on mount
+    handleUserUpdate();
+
+    return () => window.removeEventListener("userUpdated", handleUserUpdate);
   }, []);
 
   const getInitials = () => {

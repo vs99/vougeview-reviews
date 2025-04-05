@@ -1,3 +1,4 @@
+// src/app/api/products/search/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import Product from '@/models/Product';
@@ -6,9 +7,9 @@ export async function GET(request: NextRequest) {
   try {
     await dbConnect();
     
-    // Get search query from URL parameters
+    // Get search query from URL parameters using "query" instead of "q"
     const { searchParams } = new URL(request.url);
-    const query = searchParams.get('q') || '';
+    const query = searchParams.get('query') || '';
     const category = searchParams.get('category') || '';
     
     // Build search conditions

@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import dbConnect from "@/lib/dbConnect";
 import User from "@/models/User";
 
-export async function POST(req: NextRequest) {
+export async function POST(request: Request) {
   try {
     await dbConnect();
     
-    const { email, password } = await req.json();
+    const body = await request.json();
+     const { email, password } = body;
     
     if (!email || !password) {
       return NextResponse.json(
@@ -36,32 +36,19 @@ export async function POST(req: NextRequest) {
         { status: 401 }
       );
     }
-    
-    // Create a user object without the password
-    const userToReturn = {
-      id: user._id.toString(),
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      // Add other fields you need, but exclude the password
-    };
+  
     
     // Generate JWT token if you're using token-based auth
-    const token = jwt.sign(
-      { id: user._id },
-      process.env.JWT_SECRET || "your-secret-key",
-      { expiresIn: "7d" }
-    );
-    
-    // Return success response with user data and token
-    return NextResponse.json({
-      success: true,
-      message: "Login successful",
-      user: userToReturn,
-      token
-    });
-    
-  } catch (error) {
+    return NextResponse.json({ 
+      success: true, 
+      user: {
+        id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email
+      }
+    }, { status: 200 });
+  } catch (error: any) { 
     console.error("Login error:", error);
     return NextResponse.json(
       { success: false, message: "Internal server error" },
