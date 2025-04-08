@@ -1,11 +1,51 @@
 "use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
+interface Category {
+  id: string;
+  name: string;
+  image: string;
+  productCount: number;
+  description: string;
+  href: string;
+}
+
 const Footer = () => {
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch("/api/categories");
+        if (res.ok) {
+          const data = await res.json();
+          const mapped: Category[] = data.categories.map((cat: any) => ({
+            id: cat._id.toString(),
+            name: cat.name,
+            image: cat.image,
+            productCount: cat.productCount,
+            description: cat.description,
+            href: `/categories/${cat._id.toString()}`,
+          }));
+          setCategories(mapped);
+        } else {
+          console.error("Failed to fetch categories", await res.text());
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   return (
     <footer className="bg-[#654E3E] text-[#F3ECE1]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Branding & Social Section */}
           <div className="md:col-span-1">
             <Link href="/" className="text-2xl font-bold text-[#F3ECE1]">
               VougeView
@@ -14,6 +54,7 @@ const Footer = () => {
               Your trusted source for honest product reviews and ratings.
             </p>
             <div className="mt-4 flex space-x-6">
+              {/* Social icons */}
               <a href="#" className="text-[#E0D4C7] hover:text-[#F3ECE1]">
                 <span className="sr-only">Facebook</span>
                 <svg
@@ -57,53 +98,49 @@ const Footer = () => {
               </a>
             </div>
           </div>
+
+          {/* Categories Section - Two Columns */}
           <div>
             <h3 className="text-sm font-semibold text-[#E0D4C7] uppercase tracking-wider">
               Categories
             </h3>
-            <ul className="mt-4 space-y-4">
-              <li>
-                <Link
-                  href="/categories/beauty"
-                  className="text-base text-[#F3ECE1] hover:text-[#F9F5F0]"
-                >
-                  Beauty
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/categories/cars"
-                  className="text-base text-[#F3ECE1] hover:text-[#F9F5F0]"
-                >
-                  Cars
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/categories/electronics"
-                  className="text-base text-[#F3ECE1] hover:text-[#F9F5F0]"
-                >
-                  Electronics
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/categories/home-garden"
-                  className="text-base text-[#F3ECE1] hover:text-[#F9F5F0]"
-                >
-                  Home & Garden
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/categories/fashion"
-                  className="text-base text-[#F3ECE1] hover:text-[#F9F5F0]"
-                >
-                  Fashion
-                </Link>
-              </li>
+            <ul className="mt-4 grid grid-cols-2 gap-4">
+              {categories.length > 0 ? (
+                categories.map((category) => (
+                  <li key={category.id}>
+                    <Link
+                      href={category.href}
+                      className="block text-base text-[#F3ECE1] hover:text-[#F9F5F0]"
+                    >
+                      {category.name}
+                    </Link>
+                  </li>
+                ))
+              ) : (
+                <>
+                  {/* Fallback static links */}
+                  {[
+                    { name: "Beauty", href: "/categories/beauty" },
+                    { name: "Cars", href: "/categories/cars" },
+                    { name: "Electronics", href: "/categories/electronics" },
+                    { name: "Home & Garden", href: "/categories/home-garden" },
+                    { name: "Fashion", href: "/categories/fashion" },
+                  ].map((fallbackCat, index) => (
+                    <li key={index}>
+                      <Link
+                        href={fallbackCat.href}
+                        className="block text-base text-[#F3ECE1] hover:text-[#F9F5F0]"
+                      >
+                        {fallbackCat.name}
+                      </Link>
+                    </li>
+                  ))}
+                </>
+              )}
             </ul>
           </div>
+
+          {/* Company Section */}
           <div>
             <h3 className="text-sm font-semibold text-[#E0D4C7] uppercase tracking-wider">
               Company
@@ -143,6 +180,8 @@ const Footer = () => {
               </li>
             </ul>
           </div>
+
+          {/* Newsletter Section */}
           <div>
             <h3 className="text-sm font-semibold text-[#E0D4C7] uppercase tracking-wider">
               Subscribe to our newsletter

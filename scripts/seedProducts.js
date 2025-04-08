@@ -678,6 +678,7 @@ async function seedProducts() {
     const modifiedProducts = products.map(product => ({
       ...product,
       rating: 0,
+      reviewCount: 0,
     }));
 
     // Insert new products with initial rating set to 0

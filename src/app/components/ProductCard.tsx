@@ -1,7 +1,9 @@
 "use client";
+
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Review } from "../../models/Review";
 
 interface ProductCardProps {
   id: string;
@@ -23,7 +25,8 @@ const ProductCard = ({
   description,
 }: ProductCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
-
+  const [productReviews, setProductReviews] = useState<Review[]>([]);
+  const totalReviews = productReviews.length;
   const renderStars = (rating: number) => {
     const stars = [];
     const fullStars = Math.floor(rating);
@@ -56,7 +59,7 @@ const ProductCard = ({
             <defs>
               <linearGradient id="half-fill" x1="0" x2="100%" y1="0" y2="0">
                 <stop offset="50%" stopColor="currentColor" />
-                <stop offset="50%" stopColor="#CBD5E0" />
+                <stop offset="50%" stopColor="#E5E7EB" />
               </linearGradient>
             </defs>
             <path
@@ -69,7 +72,7 @@ const ProductCard = ({
         stars.push(
           <svg
             key={`star-empty-${i}`}
-            className="h-5 w-5 text-[#E0D4C7]"
+            className="h-5 w-5 text-gray-300"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
             fill="currentColor"
@@ -86,40 +89,38 @@ const ProductCard = ({
   return (
     <Link href={`/products/${id}`}>
       <div
-        className="bg-[#F9F5F0] rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300"
+        className={`bg-white rounded-2xl overflow-hidden shadow-md transform transition duration-300 ${
+          isHovered ? "scale-105 shadow-xl" : "hover:shadow-lg"
+        }`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <div className="relative h-48 w-full">
+        <div className="relative h-56 w-full">
           <Image
             src={image}
             alt={title}
             fill
-            className={`object-cover ${
+            className={`object-cover transition-transform duration-300 ${
               isHovered ? "scale-105" : "scale-100"
-            } transition-transform duration-300`}
+            }`}
           />
-          <div className="absolute top-2 left-2">
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#E0D4C7] text-[#8B6E4E]">
+          <div className="absolute top-3 left-3">
+            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800">
               {category}
             </span>
           </div>
         </div>
-        <div className="p-4">
-          <h3 className="text-lg font-medium text-[#333333] truncate">
-            {title}
-          </h3>
-          <div className="flex items-center mt-1">
+        <div className="p-5">
+          <h3 className="text-xl font-bold text-gray-800 truncate">{title}</h3>
+          <div className="flex items-center mt-2">
             <div className="flex items-center">{renderStars(rating)}</div>
-            <p className="ml-2 text-sm text-[#5A5A5A]">
-              ({reviewCount} reviews)
-            </p>
+            <p className="ml-3 text-sm text-gray-600">{reviewCount} reviews</p>
           </div>
-          <p className="mt-2 text-sm text-[#5A5A5A] line-clamp-2">
+          <p className="mt-3 text-sm text-gray-600 line-clamp-2">
             {description}
           </p>
-          <div className="mt-3">
-            <span className="inline-flex items-center justify-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-white bg-[#8B6E4E] hover:bg-[#654E3E]">
+          <div className="mt-4">
+            <span className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md text-white bg-[#8B6E4E] hover:bg-[#654E3E] transition">
               Read Review
             </span>
           </div>
